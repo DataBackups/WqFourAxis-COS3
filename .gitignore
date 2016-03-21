@@ -1,0 +1,15 @@
+!*.c 
+!*.h
+*.map
+*.lst
+*.lnp
+*.dep
+*.uvgui.*
+*.uvopt
+*.o
+*.d
+*.axf
+*.crf
+*.hex
+*.htm
+Output/
