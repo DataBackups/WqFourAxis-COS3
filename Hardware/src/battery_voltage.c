@@ -1,10 +1,16 @@
 #include "battery_voltage.h"
 
-u16 battery_voltege_adc_value;
-u16 battery_voltege_adc_average;
-float battery_voltege_value;
-u16 battery_voltege_adc_value_temp[BATTERY_VOLTAGE_FILTER_LENGTH] = {0};
+u16 battery_voltege_adc_value;                                                   	//电池电压ADC采样值
+u16 battery_voltege_adc_average;												   	//电池电压ADC采样平均值
+float battery_voltege_value;														//电池电压
+u16 battery_voltege_adc_value_temp[BATTERY_VOLTAGE_FILTER_LENGTH] = {0};			//存储电池电压ADC数值队列
 
+/*
+ * 函数名：Battery_Voltage_ADC_Init
+ * 描述  ：电池电压ADC检测初始化函数
+ * 输入  ：无
+ * 输出  ：无
+ */
 void Battery_Voltage_ADC_Init(void)
 {
 	ADC_InitTypeDef ADC_InitStructure;
@@ -41,6 +47,12 @@ void Battery_Voltage_ADC_Init(void)
     while(ADC_GetCalibrationStatus(ADC1));											//获取指定ADC1的校准程序,设置状态则等待
 }
 
+/*
+ * 函数名：Battery_Voltage_ADC_ReadValue
+ * 描述  ：电池电压ADC原始数据读取
+ * 输入  ：ch ADC通道
+ * 输出  ：无
+ */
 u16  Battery_Voltage_ADC_ReadValue(u8 ch)
 {
 	ADC_RegularChannelConfig(ADC1, ch, 1, ADC_SampleTime_239Cycles5 );	           //ADC1,ADC通道8和16,第一个转换,采样时间为239.5周期，提高采样时间可以提高精确度    
@@ -49,13 +61,19 @@ u16  Battery_Voltage_ADC_ReadValue(u8 ch)
 	return ADC_GetConversionValue(ADC1);	                                       //返回最近一次ADC1规则组的转换结果
 }
 
+/*
+ * 函数名：Battery_Voltage_ReadValue
+ * 描述  ：滤波后的电池电压，函数运行时间大概为16us
+ * 输入  ：无
+ * 输出  ：电池电压值
+ */
 float Battery_Voltage_ReadValue(void)
 {
 	static u8 filter_cnt	=	0;
 	u8 cnt = 0;
 	u32 temp = 0;
 	
-	battery_voltege_adc_value = Battery_Voltage_ADC_ReadValue(ADC_Channel_8);
+	battery_voltege_adc_value = Battery_Voltage_ADC_ReadValue(ADC_Channel_8);         //读取电池电压ADC值
 	battery_voltege_adc_value_temp[filter_cnt] = battery_voltege_adc_value;
 	
 	filter_cnt++;
@@ -66,7 +84,7 @@ float Battery_Voltage_ReadValue(void)
 	}
 	battery_voltege_adc_average = temp / BATTERY_VOLTAGE_FILTER_LENGTH;
 	
-	battery_voltege_value = ((float)battery_voltege_adc_average * 6.6f) / 4096.0f;
+	battery_voltege_value = ((float)battery_voltege_adc_average * 6.6f) / 4096.0f;    //实际电池电压值计算
 	if(filter_cnt	==	BATTERY_VOLTAGE_FILTER_LENGTH)	filter_cnt = 0;
 	return battery_voltege_value;
 }
