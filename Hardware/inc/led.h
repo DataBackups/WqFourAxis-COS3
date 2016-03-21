@@ -30,8 +30,8 @@ typedef union {
     u8 byte;
     struct
     {
-        u8 LED_1	:1;    //位域，LED_1占byte的最低位
-        u8 LED_2	:1;
+        u8 LED_1	:1;		//位域，LED_1占byte的最低位
+        u8 LED_2	:1;		
         u8 LED_3	:1;
         u8 LED_4	:1;
         u8 reserved	:4;

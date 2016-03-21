@@ -3,6 +3,19 @@
 LED_Buffer LED_Buffer_B;
 LED_Event_E LED_Control;
 
+/*
+ * 函数名：LED_Init
+ * 描述  ：
+ * LED IO口初始化	
+ * LED接口：
+ * M1-->LED1-->PA11
+ * M2-->LED2-->PA8
+ * M3-->LED3-->PB1
+ * M4-->LED4-->PB3
+ * 对应IO = 1，灯亮
+ * 输入  ：无
+ * 输出  ：无
+ */
 void LED_Init(void)
 {
 	GPIO_InitTypeDef  GPIO_InitStructure;
@@ -25,6 +38,12 @@ void LED_Init(void)
 	LED4_OFF;
 }
 
+/*
+ * 函数名：LED_Bottom_Flash
+ * 描述  ：底层LED的IO口更新
+ * 输入  ：无
+ * 输出  ：无
+ */
 void LED_Bottom_Flash(void)
 {
 
@@ -50,6 +69,12 @@ void LED_Bottom_Flash(void)
 
 }
 
+/*
+ * 函数名：LED_Flash
+ * 描述  ：事件层LED的IO口更新
+ * 输入  ：无
+ * 输出  ：无
+ */
 void LED_Flash(void)
 {
 	switch(LED_Control.event)
