@@ -5,7 +5,7 @@
 u8 offset_flag = 0;						//校准模式标志位，为0未进行校准，为1进行校准
 extern u8 calibrate_status;			//是否执行校准转态标志位
 u8 mpu6050_buffer[14];					//iic读取mpu6050后存放的数据
-float	mpu6500_tempreature = 0;
+float mpu6500_tempreature = 0;
 s16 mpu6500_tempreature_temp = 0;
 s16 mpu6500_tempreature_Offset = 0;
 
@@ -303,14 +303,14 @@ void MPU6050_Date_Offset(u16 cnt)
 	
 	if(calibrate_status)										//加速度数据保存在EEPROM中，无需重新刷新，如果执行手动校准，则重新刷新
 	{
-		MPU6500_Acc_Offset.X 	=	Temp_Acc.X	/	cnt;
-		MPU6500_Acc_Offset.Y 	=	Temp_Acc.Y	/	cnt;
-		MPU6500_Acc_Offset.Z  =	Temp_Acc.Z	/	cnt;	
+		MPU6500_Acc_Offset.X  =	Temp_Acc.X	/ cnt;
+		MPU6500_Acc_Offset.Y  =	Temp_Acc.Y	/ cnt;
+		MPU6500_Acc_Offset.Z  =	Temp_Acc.Z	/ cnt;	
 	}
 	
-	MPU6500_Gyro_Offset.X	= Temp_Gyro.X	/	cnt;
-	MPU6500_Gyro_Offset.Y	= Temp_Gyro.Y	/	cnt;
-	MPU6500_Gyro_Offset.Z =	Temp_Gyro.Z	/	cnt;
+	MPU6500_Gyro_Offset.X = Temp_Gyro.X	/ cnt;
+	MPU6500_Gyro_Offset.Y = Temp_Gyro.Y	/ cnt;
+	MPU6500_Gyro_Offset.Z =	Temp_Gyro.Z	/ cnt;
 
 	offset_flag = 0;											//退出MPU6050校准模式
 }
@@ -336,9 +336,9 @@ void MPU6050_Read_Value(void)
 			MPU6500_Gyro.Y = Byte16(s16, mpu6050_buffer[10],  mpu6050_buffer[11]) - MPU6500_Gyro_Offset.Y;
 			MPU6500_Gyro.Z = Byte16(s16, mpu6050_buffer[12],  mpu6050_buffer[13]) - MPU6500_Gyro_Offset.Z;
 
-//			mpu6500_tempreature_temp	=	Byte16(s16, mpu6050_buffer[6],  mpu6050_buffer[7]);
-//			mpu6500_tempreature	=	(float)(35000+((521+mpu6500_tempreature_temp)*100)/34); // 原来分母为340，现在分子*100，即：扩大1000倍；
-//			mpu6500_tempreature = mpu6500_tempreature/1000;                             
+			mpu6500_tempreature_temp	=	Byte16(s16, mpu6050_buffer[6],  mpu6050_buffer[7]);
+			mpu6500_tempreature	=	(float)(35000+((521+mpu6500_tempreature_temp)*100)/34); // 原来分母为340，现在分子*100，即：扩大1000倍；
+			mpu6500_tempreature = mpu6500_tempreature/1000;                             
 //			if(( -4	<	MPU6500_Gyro.X ) && (MPU6500_Gyro.X < 4) ) MPU6500_Gyro.X = 0;
 //			if(( -4	<	MPU6500_Gyro.Y ) && (MPU6500_Gyro.Y < 4) ) MPU6500_Gyro.Y = 0;
 			if(( -4	< MPU6500_Gyro.Z) && (MPU6500_Gyro.Z < 4)) 

@@ -429,6 +429,11 @@
               <FileType>1</FileType>
               <FilePath>.\App\src\system_stm32f10x.c</FilePath>
             </File>
+            <File>
+              <FileName>imu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\App\src\imu.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

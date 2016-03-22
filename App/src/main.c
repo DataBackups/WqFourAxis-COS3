@@ -5,8 +5,11 @@
 #include "led.h"
 #include "motor.h"
 #include "mpu6050.h"
+#include "imu.h"
 
 u8 calibrate_status;
+volatile S_FLOAT_XYZ Exp_Angle;
+extern float mpu6500_tempreature;
 
 int main(void)
 {	 
@@ -20,11 +23,23 @@ int main(void)
 	while(MPU6050_Init());
 	//Motor_PWM_Flash(100,100,100,100);
 	LED_Control.event = Event_Batter_Charge;
+	IMU_Date_Init(); 										 	 	 //每次解锁后都先初始化导航数据
+	MPU6050_Date_Offset(5000);		
 	while(1)
 	{
-		MPU6050_Read_Value();
+		IMU_Prepare_Data();
+		IMU_Update();
 		temp = Battery_Voltage_ReadValue();
 		printf("电压值= %0.2f\n",temp);
+		printf("\n");
+		printf("roll = %f\n",Angle.X);
+		printf("\n");
+		printf("pitch = %f\n",Angle.Y);
+		printf("\n");
+		printf("yaw = %f\n",Angle.Z);
+		printf("\n");
+		printf("temp = %f\n",mpu6500_tempreature);
+		printf("\n");
 		LED_Flash();
 		delay_ms(500);
 	}
