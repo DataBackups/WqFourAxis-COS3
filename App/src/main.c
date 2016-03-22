@@ -13,7 +13,7 @@ int main(void)
 	uart_init(115200);	 							//串口初始化为115200
 	Battery_Voltage_ADC_Init();  
 	LED_Init();
-	Motor_Init(999,2);      						//PWM输出初始化，电机PWM频率500Hz
+	Motor_Init(999,2);      						//PWM输出初始化，电机PWM频率24000Hz
 	//Motor_PWM_Flash(100,100,100,100);
 	LED_Control.event = Event_Batter_Charge;
 	while(1)
