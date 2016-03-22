@@ -4,6 +4,9 @@
 #include "battery_voltage.h"
 #include "led.h"
 #include "motor.h"
+#include "mpu6050.h"
+
+u8 calibrate_status;
 
 int main(void)
 {	 
@@ -14,10 +17,12 @@ int main(void)
 	Battery_Voltage_ADC_Init();  
 	LED_Init();
 	Motor_Init(999,2);      						//PWM输出初始化，电机PWM频率24000Hz
+	while(MPU6050_Init());
 	//Motor_PWM_Flash(100,100,100,100);
 	LED_Control.event = Event_Batter_Charge;
 	while(1)
 	{
+		MPU6050_Read_Value();
 		temp = Battery_Voltage_ReadValue();
 		printf("电压值= %0.2f\n",temp);
 		LED_Flash();
