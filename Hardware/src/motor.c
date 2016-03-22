@@ -18,10 +18,10 @@ void Motor_Init(u16 arr, u16 psc)
     																
     TIM_DeInit(TIM2);												// 复位定时器。  
 																	// 配置计时器 
-    //PrescalerValue = (uint16_t) (SystemCoreClock / 24000000) - 1;   //电机PWM频率24000Hz
+    //PrescalerValue = (uint16_t) (SystemCoreClock / 24000000) - 1; //电机PWM频率24000Hz
     //Tout= ((ARR+1)*(PSC+1))/Tclk,  Tclk： TIMx 的输入时钟频率（单位为 Mhz）,Tout： TIMx 溢出时间（单位为 us）
     TIM_TimeBaseStructure.TIM_Period = arr;		            		//(ARR)计数上线	
-    TIM_TimeBaseStructure.TIM_Prescaler = psc;			//PWM(PSC)时钟分频
+    TIM_TimeBaseStructure.TIM_Prescaler = psc;						//PWM(PSC)时钟分频
     TIM_TimeBaseStructure.TIM_ClockDivision = 0;	
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up; 	//向上计数
     TIM_TimeBaseInit(TIM2,&TIM_TimeBaseStructure);
