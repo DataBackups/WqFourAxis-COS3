@@ -105,7 +105,7 @@ short MPU6050_Get_Temperature(void);
 u8 MPU6050_Get_Gyroscope(short *gx,short *gy,short *gz);
 u8 MPU6050_Get_Accelerometer(short *ax,short *ay,short *az);
 
-void MPU6050_Date_Offset(u16 cnt);
+extern void MPU6050_Date_Offset(u16 cnt);
 extern void MPU6050_Read_Value(void);
 
 #endif
