@@ -28,11 +28,32 @@
 //1,增加了对UCOSII的支持
 #define USART_REC_LEN  			200  	//定义最大接收字节数 200
 #define EN_USART1_RX 			1		//使能（1）/禁止（0）串口1接收
+
+#define BLE_APP 0
+#define USB_PC  0
+
+#define RX_BUFFER_SIZE   128
+#define TX_BUFFER_SIZE   128
+
+extern uint8_t RX_buffer[RX_BUFFER_SIZE];
+extern uint8_t TX_buffer[TX_BUFFER_SIZE];
+
+typedef struct 
+{
+	uint16_t volatile Write_Index;
+	uint16_t volatile Read_Index;
+	uint16_t Mask;
+	uint8_t *P_buffer;
+}Usart_Buffer;
+
+extern Usart_Buffer Usart_TX_Buffer;//环形发送结构体
+extern Usart_Buffer Usart_RX_Buffer;//环形接收结构体
 	  	
 extern u8  USART_RX_BUF[USART_REC_LEN]; //接收缓冲,最大USART_REC_LEN个字节.末字节为换行符 
 extern u16 USART_RX_STA;         		//接收状态标记	
 //如果想串口中断接收，请不要注释以下宏定义
 void uart_init(u32 bound);
+
 #endif
 
 

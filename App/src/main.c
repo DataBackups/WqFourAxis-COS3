@@ -10,8 +10,14 @@
 #include "eeprom.h"
 #include "flash_memory.h"
 
+
+u8 unlock_flag;
 u8 calibrate_status;
-volatile S_FLOAT_XYZ Exp_Angle;
+float angle_z;
+s32 height;
+u8 rc_channel_5__status;
+u8 rc_channel_6__status;
+
 extern float mpu6500_tempreature;
 
 int main(void)
