@@ -3,6 +3,7 @@
 #include "control.h"
 #include "flash_memory.h"
 
+u8 imu_calibrate_flag = 0;
 u8 unlock_flag = 0 ;					//解锁标志位，为0未解锁，为1解锁	
 u8 calibrate_status = 0;			 	//是否执行校准转态标志位
 extern vs16 throttle;
@@ -37,7 +38,7 @@ void Remote_Control_Cmd_Process(void)
 			//flyLogApp=1;
 			break;
 		case REMOTE_CONTROL_CMD_FLY_CALI:
-			//imuCaliFlag=1;
+			imu_calibrate_flag =1;
 			break;
 		case REMOTE_CONTROL_CMD_FLY_HEAD_FREE:
 			//SetHeadFree(1);
