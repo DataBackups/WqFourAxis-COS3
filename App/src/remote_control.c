@@ -35,11 +35,11 @@ void Remote_Control_Cmd_Process(void)
 		case REMOTE_CONTROL_CMD_FLY_UNLOCK:			//上锁
 			lock_unlock_flag = 0;
 			break;
-		case REMOTE_CONTROL_CMD_FLY_STATE:			//上传信息到手机
-			fly_state_up = 1;
+		case REMOTE_CONTROL_CMD_FLY_LAUNCH:			//起飞
+			
 			break;
-		case REMOTE_CONTROL_CMD_FLY_CALI:			//校准陀螺仪
-			imu_calibrate_flag =1;
+		case REMOTE_CONTROL_CMD_FLY_LAND:			//降落
+			
 			break;
 		case REMOTE_CONTROL_CMD_FLY_HEAD_FREE:  	//有头模式
 			
@@ -47,8 +47,17 @@ void Remote_Control_Cmd_Process(void)
 		case REMOTE_CONTROL_CMD_FLY_UNHEAD_FREE:	//无头模式
 			
 			break;
-		case REMOTE_CONTROL_CMD_FLY_LAND:			//自动降落
+		case REMOTE_CONTROL_CMD_FLY_HOLD_HIGHT:		//定高
 			
+			break;
+		case REMOTE_CONTROL_CMD_FLY_STOP_HIGHT: 	//取消定高
+			
+			break;	
+		case REMOTE_CONTROL_CMD_FLY_CALI:			//校准陀螺仪
+			imu_calibrate_flag =1;
+			break;
+		case REMOTE_CONTROL_CMD_FLY_STATE:			//上传信息到手机
+			fly_state_up = 1;
 			break;
 	}
 }
