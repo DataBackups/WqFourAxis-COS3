@@ -11,8 +11,6 @@
 #include "flash_memory.h"
 #include "ms5611.h"
 
-extern float mpu6500_tempreature;
-
 int main(void)
 {	 
 	FLASH_Unlock();									//解锁flash,是否安全更多考虑
