@@ -106,6 +106,18 @@ uint16_t Usart_Buffer_Cnt(Usart_Buffer *Ring_Buffer)
 	return (Ring_Buffer->Write_Index - Ring_Buffer->Read_Index) & Ring_Buffer->Mask;//数据长度掩码很重要，这是决定数据环形的关键
 }
 
+void Usart_Send_Buffer(uint8_t *data, uint8_t lenth)
+{
+	uint8_t i;
+	
+	for(i=0;i<lenth;i++)
+	{
+		Usart_Buffer_Write_Data(&Usart_TX_Buffer,*data);
+		data++;
+	}
+	USART_ITConfig(USART1, USART_IT_TXE, ENABLE);  //启动发送中断开始啪啪啪发送缓冲中的数据
+}
+
 /*
  * 函数名：uart_init
  * 描述  ：串口3初始化函数

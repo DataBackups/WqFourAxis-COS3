@@ -12,7 +12,7 @@
 #include "ms5611.h"
 #include "remote_control.h"
 #include "control.h"
-
+#include "data_pc.h"
 
 int main(void)
 {	 
@@ -21,7 +21,11 @@ int main(void)
 	Flash_Memory_Init();							//参数初始化
 	delay_init();	    	 						//延时函数初始化	  
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	//设置中断优先级分组为组2：2位抢占优先级，2位响应优先级
+#if 0
 	uart_init(115200);	 							//串口初始化为115200
+#else
+	uart_init(460800);								//串口初始化为460800
+#endif
 	Battery_Voltage_ADC_Init();  
 	LED_Init();
 	Motor_Init(3999,35);      						//PWM输出初始化，电机PWM频率500Hz
@@ -49,7 +53,7 @@ int main(void)
 //			ms5611_ms = 0;
 //		}
 		IMU_Prepare_Data();  
-		if(lock_unlock_flag)//判断是否解锁与是否在执行解锁动作	
+		if(1)//判断是否解锁与是否在执行解锁动作	
 		{		
 											//判断是否在执行上锁动作	
 			IMU_Update();					//姿态更新频率为1KHz
@@ -58,7 +62,7 @@ int main(void)
 			if((ms % 2) == 0)	 			//控制频率500Hz
 			{ 
 				Remote_Control_PWM_Convert();
-				//Data_Send();
+				Data_Send_To_PC();
 				Control();	
 			}			
 					
