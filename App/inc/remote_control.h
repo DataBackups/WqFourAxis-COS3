@@ -32,5 +32,6 @@ u8 Remote_Control_Is_Connected(void);
 u8 Remote_Control_Is_Calibrate(void);
 
 extern u8 imu_calibrate_flag;
+extern u8 hold_height;
 
 #endif

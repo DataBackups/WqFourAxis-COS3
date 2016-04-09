@@ -3,10 +3,12 @@
 #include "control.h"
 #include "flash_memory.h"
 
-u8 imu_calibrate_flag = 0;
-u8 fly_state_up = 0;
+u8 imu_calibrate_flag = 0;              //校准标志位
+u8 fly_state_up = 0;					//上传信息标志位
+u8 hold_height = 0;
 u8 lock_unlock_flag = 0 ;				//解锁标志位，为0未解锁，为1解锁;上锁需要将标志置 0	
 u8 calibrate_status = 0;			 	//是否执行校准转态标志位
+
 extern vs16 throttle;
 extern S_FLOAT_XYZ Exp_Angle;
 
@@ -48,10 +50,10 @@ void Remote_Control_Cmd_Process(void)
 			
 			break;
 		case REMOTE_CONTROL_CMD_FLY_HOLD_HIGHT:		//定高
-			
+			hold_height = 1;
 			break;
 		case REMOTE_CONTROL_CMD_FLY_STOP_HIGHT: 	//取消定高
-			
+			hold_height = 0;
 			break;	
 		case REMOTE_CONTROL_CMD_FLY_CALI:			//校准陀螺仪
 			imu_calibrate_flag =1;

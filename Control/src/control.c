@@ -56,10 +56,10 @@ void Control(void)
 	}
 	else
 	{
-			motor[1]  = 0;
-			motor[2]  = 0;
-			motor[3]  = 0;
-			motor[4]  = 0;
+		motor[1]  = 0;
+		motor[2]  = 0;
+		motor[3]  = 0;
+		motor[4]  = 0;
 			
 		fly_state = 0;
 	}
@@ -154,7 +154,7 @@ void Height_Control(void)
 {
 	static s32 height_err = 0;	//高度偏差
 	static s32	height_Last = 0;
-	if(1)	//进入定高模式,注意数据更新的频率只有50hz
+	if(hold_height)	//进入定高模式,注意数据更新的频率只有50hz
 	{ 
 		if(exp_height_flag == 1)
 		{
