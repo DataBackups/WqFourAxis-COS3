@@ -30,8 +30,4 @@ u8 Remote_Control_Is_Calibrate(void);
 
 extern u8 imu_calibrate_flag;
 
-u8 Is_WFLY_Lock(void);
-u8 Is_WFLY_Unlock(void);
-
-
 #endif
