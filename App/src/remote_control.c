@@ -4,7 +4,8 @@
 #include "flash_memory.h"
 
 u8 imu_calibrate_flag = 0;
-u8 unlock_flag = 0 ;					//解锁标志位，为0未解锁，为1解锁	
+u8 fly_state_up = 0;
+u8 lock_unlock_flag = 0 ;				//解锁标志位，为0未解锁，为1解锁;上锁需要将标志置 0	
 u8 calibrate_status = 0;			 	//是否执行校准转态标志位
 extern vs16 throttle;
 extern S_FLOAT_XYZ Exp_Angle;
@@ -23,31 +24,31 @@ void Remote_Control_Cmd_Process(void)
 	switch(Usart_Data_Temp[4])
 	{
 		case REMOTE_CONTROL_CMD_FLY_FOUR_DATA:
-			Remote_Control_Data[0] = Usart_Data_Temp[6]<<8  | Usart_Data_Temp[5];  //THROTTLE
-			Remote_Control_Data[1] = Usart_Data_Temp[8]<<8  | Usart_Data_Temp[7];  //YAW
-			Remote_Control_Data[2] = Usart_Data_Temp[10]<<8 | Usart_Data_Temp[9];  //PITCH
-			Remote_Control_Data[3] = Usart_Data_Temp[12]<<8 | Usart_Data_Temp[11]; //ROLL
+			Remote_Control_Data[0] = Usart_Data_Temp[6]<<8  | Usart_Data_Temp[5];  //THROTTLE  油门
+			Remote_Control_Data[1] = Usart_Data_Temp[8]<<8  | Usart_Data_Temp[7];  //YAW	   航向
+			Remote_Control_Data[2] = Usart_Data_Temp[10]<<8 | Usart_Data_Temp[9];  //PITCH     俯仰
+			Remote_Control_Data[3] = Usart_Data_Temp[12]<<8 | Usart_Data_Temp[11]; //ROLL      横滚
 			break;
-		case REMOTE_CONTROL_CMD_FLY_LOCK://arm，上锁
-			//armState=REQ_ARM;
+		case REMOTE_CONTROL_CMD_FLY_LOCK:			//上锁
+			lock_unlock_flag = 0;
 			break;
-		case REMOTE_CONTROL_CMD_FLY_UNLOCK://disarm，解锁
-			//armState=REQ_DISARM;
+		case REMOTE_CONTROL_CMD_FLY_UNLOCK:			//解锁
+			lock_unlock_flag = 1;
 			break;
-		case REMOTE_CONTROL_CMD_FLY_STATE:	
-			//flyLogApp=1;
+		case REMOTE_CONTROL_CMD_FLY_STATE:			//上传信息到手机
+			fly_state_up = 1;
 			break;
-		case REMOTE_CONTROL_CMD_FLY_CALI:
+		case REMOTE_CONTROL_CMD_FLY_CALI:			//校准陀螺仪
 			imu_calibrate_flag =1;
 			break;
-		case REMOTE_CONTROL_CMD_FLY_HEAD_FREE:
-			//SetHeadFree(1);
+		case REMOTE_CONTROL_CMD_FLY_HEAD_FREE:  	//有头模式
+			
 			break;
-		case REMOTE_CONTROL_CMD_FLY_UNHEAD_FREE:
-			//SetHeadFree(0);
+		case REMOTE_CONTROL_CMD_FLY_UNHEAD_FREE:	//无头模式
+			
 			break;
-		case REMOTE_CONTROL_CMD_FLY_LAND:		//自动降落
-			//altCtrlMode=LANDING;
+		case REMOTE_CONTROL_CMD_FLY_LAND:			//自动降落
+			
 			break;
 	}
 }
@@ -122,7 +123,7 @@ u8 Remote_Control_Is_Connected(void)
  */  
 u8 Remote_Control_Is_Calibrate(void)
 {	
-	if( !unlock_flag )														//如果未解锁才执行校准检测
+	if( !lock_unlock_flag )													//如果未解锁才执行校准检测
 	{	
 		SysTick->CTRL &= ~ SysTick_CTRL_ENABLE_Msk;							//关闭中断
 		calibrate_status = 1;
