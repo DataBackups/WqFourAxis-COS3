@@ -9,14 +9,7 @@
 #include "timer.h"
 #include "eeprom.h"
 #include "flash_memory.h"
-
-
-u8 unlock_flag;
-u8 calibrate_status;
-float angle_z;
-s32 height;
-u8 rc_channel_5__status;
-u8 rc_channel_6__status;
+#include "ms5611.h"
 
 extern float mpu6500_tempreature;
 
@@ -40,6 +33,7 @@ int main(void)
 	TIM3_Int_Init(1000,72);
 	IMU_Date_Init(); 								//每次解锁后都先初始化导航数据
 	MPU6050_Date_Offset(5000);		
+	MS5611_Init();
 	while(1)
 	{
 //		IMU_Prepare_Data();

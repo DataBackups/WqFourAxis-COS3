@@ -16,11 +16,12 @@
 
 void Remote_control_APP(uint8_t Data_In);
 void Remote_control_Cmd_Process(void);
+void Remote_Control_PWM_Convert(void);
+u8 Remote_Control_Is_Connected(void);
+u8 Remote_Control_Is_Calibrate(void);
 
 u8 Is_WFLY_Lock(void);
 u8 Is_WFLY_Unlock(void);
-u8 Is_RC_Calibrate(void);
-u8 Is_WFLY_Connected(void);
-void WFLY_PWM_Convert(void);
+
 
 #endif

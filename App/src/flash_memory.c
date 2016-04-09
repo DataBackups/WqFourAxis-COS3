@@ -1,6 +1,7 @@
 #include "flash_memory.h"
 #include "eeprom.h"
 #include "mpu6050.h"
+#include "control.h"
 
 static void Flash_Memory_MPU6500_GYRO_Offset_Read(void);
 static void Flash_Memory_MPU6500_ACC_Offset_Read(void);
@@ -13,7 +14,7 @@ static void Flash_Memory_MPU6500_ACC_Offset_Read(void);
  */  
 void Flash_Memory_Init(void)
 {
-	//PID_Init();												//PID参数初始化
+	PID_Init();												//PID参数初始化
 	//Flash_Memory_MPU6500_GYRO_Offset_Read();					//陀螺仪原始补偿受环境影响大，每次重新校准
 	Flash_Memory_MPU6500_ACC_Offset_Read();
 }

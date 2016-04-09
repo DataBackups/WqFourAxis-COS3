@@ -3,9 +3,9 @@
 #include "mpu6050.h"
 #include "imu.h" 
 
-volatile S_INT16_XYZ Acc_Avg;			 //滑动滤波后加速度计值
-volatile S_FLOAT_XYZ Acc_Angle;    //加速度计计算出的角度
-volatile S_FLOAT_XYZ Angle;        //数据融合计算出的角度
+volatile S_INT16_XYZ Acc_Avg;		//滑动滤波后加速度计值
+volatile S_FLOAT_XYZ Acc_Angle;    	//加速度计计算出的角度
+volatile S_FLOAT_XYZ Angle;        	//数据融合计算出的角度
 volatile S_INT16_XYZ Acc_Buf[FILTER_LENGTH] = {0};
 
 /*
