@@ -444,6 +444,16 @@
               <FileType>1</FileType>
               <FilePath>.\App\src\remote_control.c</FilePath>
             </File>
+            <File>
+              <FileName>aid_control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\App\src\aid_control.c</FilePath>
+            </File>
+            <File>
+              <FileName>data_pc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\App\src\data_pc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
