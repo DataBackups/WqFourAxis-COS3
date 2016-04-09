@@ -29,11 +29,11 @@ void Remote_Control_Cmd_Process(void)
 			Remote_Control_Data[2] = Usart_Data_Temp[10]<<8 | Usart_Data_Temp[9];  //PITCH     俯仰
 			Remote_Control_Data[3] = Usart_Data_Temp[12]<<8 | Usart_Data_Temp[11]; //ROLL      横滚
 			break;
-		case REMOTE_CONTROL_CMD_FLY_LOCK:			//上锁
-			lock_unlock_flag = 0;
-			break;
-		case REMOTE_CONTROL_CMD_FLY_UNLOCK:			//解锁
+		case REMOTE_CONTROL_CMD_FLY_LOCK:			//解锁
 			lock_unlock_flag = 1;
+			break;
+		case REMOTE_CONTROL_CMD_FLY_UNLOCK:			//上锁
+			lock_unlock_flag = 0;
 			break;
 		case REMOTE_CONTROL_CMD_FLY_STATE:			//上传信息到手机
 			fly_state_up = 1;
