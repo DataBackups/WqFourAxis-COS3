@@ -2,7 +2,7 @@
 
 /*
  * 函数名：Motor_Init
- * 描述  ：定时器2，PWM输出初始化，电机PWM频率24000Hz，调用该函数，即初始化定时器2为PWM输出模式
+ * 描述  ：定时器2，PWM输出初始化，电机PWM频率500Hz，调用该函数，即初始化定时器2为PWM输出模式
  * 输入  ：arr：自动重装载寄存器周期的值；psc：时钟频率除数的预分频值；Tout= ((ARR+1)*(PSC+1))/Tclk,Tclk：TIMx 的输入时钟频率（单位为 Mhz）,Tout：TIMx 溢出时间（单位为 us）
  * 输出  ：无
  */
@@ -51,7 +51,7 @@ void Motor_Init(u16 arr, u16 psc)
 
 /*
  * 函数名：Motor_PWM_Flash
- * 描述  ：更新四路PWM值，四路PWM由定时器2输出，输入范围0-999
+ * 描述  ：更新四路PWM值，四路PWM由定时器2输出，输入范围0-3999
  * 输入  ：MOTO1_PWM,MOTO2_PWM,MOTO3_PWM,MOTO4_PWM
  * 输出  ：无
  */
@@ -64,7 +64,7 @@ void Motor_PWM_Flash(s16 MOTO1_PWM,s16 MOTO2_PWM,s16 MOTO3_PWM,s16 MOTO4_PWM)
     if(MOTO1_PWM<=0)	MOTO1_PWM = 0;
     if(MOTO2_PWM<=0)	MOTO2_PWM = 0;
     if(MOTO3_PWM<=0)	MOTO3_PWM = 0;
-    if(MOTO4_PWM<=0)	MOTO4_PWM = 0;//限定输入不能小于0，大于999
+    if(MOTO4_PWM<=0)	MOTO4_PWM = 0;//限定输入不能小于0，大于3999
 
     TIM2->CCR1 = MOTO1_PWM;
     TIM2->CCR2 = MOTO2_PWM;

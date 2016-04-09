@@ -120,7 +120,7 @@ float angle_z;
  */  
 u8 Remote_Control_Is_Connected(void)
 {
-	if((Remote_Control_Data[0] > 1900) &&(Remote_Control_Data[1] < 1100) && (Remote_Control_Data[2] > 1900) && (Remote_Control_Data[3] > 1900))
+	if((Remote_Control_Data[0] > 2000) &&(Remote_Control_Data[1] < 1100) && (Remote_Control_Data[2] > 2000) && (Remote_Control_Data[3] > 2000))
 		return 0;
 	else 
 		return 1;

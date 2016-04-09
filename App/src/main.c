@@ -10,6 +10,9 @@
 #include "eeprom.h"
 #include "flash_memory.h"
 #include "ms5611.h"
+#include "remote_control.h"
+#include "control.h"
+
 
 int main(void)
 {	 
@@ -21,7 +24,7 @@ int main(void)
 	uart_init(115200);	 							//串口初始化为115200
 	Battery_Voltage_ADC_Init();  
 	LED_Init();
-	Motor_Init(999,2);      						//PWM输出初始化，电机PWM频率24000Hz
+	Motor_Init(3999,35);      						//PWM输出初始化，电机PWM频率500Hz
 	while(MPU6050_Init());
 	TIM3_Int_Init(1000,72);
 	IMU_Date_Init(); 								//每次解锁后都先初始化导航数据
@@ -29,6 +32,69 @@ int main(void)
 	MS5611_Init();
 	while(1)
 	{
-		delay_ms(500);
+//		if(ms5611_ms == 20)
+//		{
+//			if(ms5611_status == 1) 
+//			{
+//				MS5611_Pressure_Calculate();
+//				MS5611_Altitude_Calculate();
+//			}
+//			MS5611_TemperatureADC_Conversion();
+//		}
+//		if(ms5611_ms == 40)
+//		{
+//			MS5611_Temperature_Calculate();
+//			MS5611_PressureADC_Conversion();
+//			ms5611_status = 1;
+//			ms5611_ms = 0;
+//		}
+		IMU_Prepare_Data();  
+		if(lock_unlock_flag)//判断是否解锁与是否在执行解锁动作	
+		{		
+											//判断是否在执行上锁动作	
+			IMU_Update();					//姿态更新频率为1KHz
+			ms++;
+			
+			if((ms % 2) == 0)	 			//控制频率500Hz
+			{ 
+				Remote_Control_PWM_Convert();
+				//Data_Send();
+				Control();	
+			}			
+					
+			if(ms == 1000)
+			{
+				system_time++;
+				ms = 0;	
+			}		
+			
+			if(Battery_Voltage_ReadValue() < 3.1)//如果电池电压小于3.1V，则快闪提示报警(电机转动会拉低电压)
+			{
+				if(cnt % 50 == 0)	
+				{	
+					cnt = 0;
+				}	
+			}			
+			else if(cnt % 500 == 0)	
+			{	
+				cnt = 0;
+			}	
+		}
+	
+		else																	 //未解锁
+		{
+			Motor_PWM_Flash(0,0,0,0);					 //确保安全
+			if(Battery_Voltage_ReadValue() < 3.65)//如果电池电压小于3.65V，则快闪提示报警
+			{
+				if(cnt % 50 == 0)	
+				{	
+					cnt = 0;
+				}	
+			}	
+			else if(cnt % 1000 == 0)	
+			{	
+				cnt = 0;
+			}	
+		}			
 	}
 }

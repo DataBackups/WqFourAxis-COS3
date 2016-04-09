@@ -6,8 +6,8 @@
 #include "motor.h"
 #include "imu.h"
 
-#define LAUNCH_THROTTLE		600 			//起飞油门
-#define ADD_THROTTLE		1000 			//补充油门
+#define LAUNCH_THROTTLE		1500 			//起飞油门
+#define ADD_THROTTLE		1500 			//补充油门
 
 typedef struct PID
 {

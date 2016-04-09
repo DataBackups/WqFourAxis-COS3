@@ -1,5 +1,17 @@
 #include "timer.h"
 #include "usart.h"
+#include "ms5611.h"
+#include "imu.h"
+#include "remote_control.h"
+#include "control.h"
+#include "battery_voltage.h"
+#include "motor.h"
+
+volatile s16 system_time = 0;//单位：S
+volatile u16 cnt = 0;
+volatile u16 ms = 0;
+volatile u16 ms5611_ms = 0;
+volatile u16 ms5611_status = 0;
 
 /*
  * 函数名：TIM3_Int_Init
@@ -42,9 +54,12 @@ void TIM3_Int_Init(u16 arr,u16 psc)
  */  
 void TIM3_IRQHandler(void)   //TIM3中断
 {
+
 	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET)  			//检查TIM3更新中断发生与否
-	{
-		TIM_ClearITPendingBit(TIM3, TIM_IT_Update );  				//清除TIMx更新中断标志 
+	{		
+		cnt++;	
+		ms5611_ms++;		
 		
+		TIM_ClearITPendingBit(TIM3, TIM_IT_Update );  				//清除TIMx更新中断标志 	
 	}
 }
