@@ -1,6 +1,9 @@
 #include "led.h"
 #include "remote_control.h"
 #include "battery_voltage.h"
+#include "motor.h"
+#include "imu.h"
+#include "math.h"
 
 void Aid_Control_Led_Alarm(void)
 {
@@ -23,6 +26,14 @@ void Aid_Control_Led_Alarm(void)
 		LED_Control.event = Event_Batter_Charge;
 }
 
+void Aid_Control_Crash(void)
+{
 
+	if(fabs(Angle.X)>80 || fabs(Angle.Y)>80 )
+	{
+		Motor_PWM_Flash(0,0,0,0);
+		//FLY_ENABLE=0;
+	}
+}
 
 
