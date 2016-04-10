@@ -21,6 +21,8 @@ typedef struct
 	char   Battery_Charge_State;			  	//充电状态
 }Battery_Voltage;
 
+extern Battery_Voltage Battery;
+
 void Battery_Voltage_ADC_Init(void);            //电池电压ADC检测初始化函数
 u16  Battery_Voltage_ADC_ReadValue(u8 ch);      //电池电压ADC原始数据读取
 float Battery_Voltage_ReadValue(void);          //滤波后的电池电压，函数运行时间大概为16us
