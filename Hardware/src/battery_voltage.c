@@ -4,7 +4,7 @@ u16 battery_voltege_adc_value;                                                  
 u16 battery_voltege_adc_average;												   	//电池电压ADC采样平均值
 float battery_voltege_value;														//电池电压
 u16 battery_voltege_adc_value_temp[BATTERY_VOLTAGE_FILTER_LENGTH] = {0};			//存储电池电压ADC数值队列
-
+Battery_Voltage Battery;															//实例化一个电压信息结构体
 /*
  * 函数名：Battery_Voltage_ADC_Init
  * 描述  ：电池电压ADC检测初始化函数
@@ -45,6 +45,12 @@ void Battery_Voltage_ADC_Init(void)
 
     ADC_StartCalibration(ADC1);	 													//开启AD校准
     while(ADC_GetCalibrationStatus(ADC1));											//获取指定ADC1的校准程序,设置状态则等待
+	
+	Battery.Battery_Real_Voltage = 4.20;											//单位为v 电池实际电压     校准电压时修改
+    Battery.ADC_Input_Voltage = 2.08;												//单位为v R3和R4连接处电压 校准电压时修改
+    Battery.MCU_Real_Voltage   = 3.29;												//单位为v 单片机供电电压   校准电压时修改
+    Battery.Battery_K   = Battery.Battery_Real_Voltage / Battery.ADC_Input_Voltage;	//计算电压计算系数
+    Battery.Battery_ADC_Min = 2000;													//电压门限AD值
 }
 
 /*
@@ -59,6 +65,23 @@ u16  Battery_Voltage_ADC_ReadValue(u8 ch)
 	ADC_SoftwareStartConvCmd(ADC1, ENABLE);		                                   //使能指定的ADC1的软件转换启动功能，软件控制转换，使用用外部触发(SWSTART)    
 	while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC ));                                //等待转换结束
 	return ADC_GetConversionValue(ADC1);	                                       //返回最近一次ADC1规则组的转换结果
+}
+
+/*
+ * 函数名：Battery_Voltage_ADC_Average
+ * 描述  ：获取通道ch的转换值，取times次,然后平均
+ * 输入  ：ch ADC通道 times读取次数
+ * 输出  ：返回值:通道ch的times次转换结果平均值
+ */
+u16 Battery_Voltage_ADC_Average(u8 ch,u8 times)
+{
+    u32 temp_value=0;
+    u8 i;
+    for(i = 0; i < times; i++)
+    {
+        temp_value += Battery_Voltage_ADC_ReadValue(ch);
+    }
+    return temp_value / times;
 }
 
 /*
@@ -87,4 +110,35 @@ float Battery_Voltage_ReadValue(void)
 	battery_voltege_value = ((float)battery_voltege_adc_average * 6.6f) / 4096.0f;    //实际电池电压值计算
 	if(filter_cnt	==	BATTERY_VOLTAGE_FILTER_LENGTH)	filter_cnt = 0;
 	return battery_voltege_value;
+}
+
+//检测电池电压
+void BatteryCheck(void)
+{
+    Battery.Battery_ADC  = Battery_Voltage_ADC_Average(ADC_Channel_8,BATTERY_VOLTAGE_FILTER_LENGTH);            				//电池电压检测
+    Battery.Battery_Test_Value = Battery.Battery_K * (Battery.Battery_ADC/4096.0) * Battery.MCU_Real_Voltage;					//实际电压 值计算
+    if(1)
+    {
+        if(Battery.Battery_ADC <= Battery.Battery_ADC_Min)
+        {
+            Battery.Battery_Alarm = 1;
+        }
+        else
+            Battery.Battery_Alarm = 0;
+    }
+    else
+    {
+        if((Battery.Battery_Test_Value < BATTERY_VOLTAGE_ALARM_VAL)&&(Battery.Battery_Test_Value > BATTERY_VOLTAGE_CHARGE_VAL))	//低于3.7v 且大于充电检测电压 BATTERY_VOLTAGE_CHARGE_VAL
+            Battery.Battery_Alarm=1;
+        else
+            Battery.Battery_Alarm=0;
+    }
+
+    if(Battery.Battery_Test_Value < BATTERY_VOLTAGE_CHARGE_VAL) 																//正在充电	
+    {
+        Battery.Battery_Charge_State = 1;
+    }
+    else
+        Battery.Battery_Charge_State = 0;
+
 }

@@ -22,9 +22,9 @@ int main(void)
 	delay_init();	    	 						//延时函数初始化	  
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	//设置中断优先级分组为组2：2位抢占优先级，2位响应优先级
 #if 1
-	uart_init(115200);	 							//串口初始化为115200
+	uart_init(115200);	 							//串口初始化为115200  蓝牙控制
 #else
-	uart_init(460800);								//串口初始化为460800
+	uart_init(460800);								//串口初始化为460800  PC调试
 #endif
 	Battery_Voltage_ADC_Init();  
 	LED_Init();
@@ -71,34 +71,11 @@ int main(void)
 				system_time++;
 				ms = 0;	
 			}		
-			
-			if(Battery_Voltage_ReadValue() < 3.1)//如果电池电压小于3.1V，则快闪提示报警(电机转动会拉低电压)
-			{
-				if(cnt % 50 == 0)	
-				{	
-					cnt = 0;
-				}	
-			}			
-			else if(cnt % 500 == 0)	
-			{	
-				cnt = 0;
-			}	
 		}
 	
 		else																	 //未解锁
 		{
-			Motor_PWM_Flash(0,0,0,0);					 //确保安全
-			if(Battery_Voltage_ReadValue() < 3.65)//如果电池电压小于3.65V，则快闪提示报警
-			{
-				if(cnt % 50 == 0)	
-				{	
-					cnt = 0;
-				}	
-			}	
-			else if(cnt % 1000 == 0)	
-			{	
-				cnt = 0;
-			}	
+			Motor_PWM_Flash(0,0,0,0);					 //确保安全	
 		}			
 	}
 }
