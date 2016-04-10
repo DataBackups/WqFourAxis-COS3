@@ -113,7 +113,13 @@ float Battery_Voltage_ReadValue(void)
 }
 
 //检测电池电压
-void BatteryCheck(void)
+/*
+ * 函数名：Battery_Voltege_Check
+ * 描述  ：检测电池电压，获取电池的状态
+ * 输入  ：无
+ * 输出  ：无
+ */
+void Battery_Voltege_Check(void)
 {
     Battery.Battery_ADC  = Battery_Voltage_ADC_Average(ADC_Channel_8,BATTERY_VOLTAGE_FILTER_LENGTH);            				//电池电压检测
     Battery.Battery_Test_Value = Battery.Battery_K * (Battery.Battery_ADC/4096.0) * Battery.MCU_Real_Voltage;					//实际电压 值计算
