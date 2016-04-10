@@ -106,11 +106,17 @@ uint16_t Usart_Buffer_Cnt(Usart_Buffer *Ring_Buffer)
 	return (Ring_Buffer->Write_Index - Ring_Buffer->Read_Index) & Ring_Buffer->Mask;//数据长度掩码很重要，这是决定数据环形的关键
 }
 
+/*
+ * 函数名：Usart_Send_Buffer
+ * 描述  ：发送多个数据
+ * 输入  ：data ：输入传输的数据 lenth：输入的数据的长度
+ * 输出  ：无
+ */
 void Usart_Send_Buffer(uint8_t *data, uint8_t lenth)
 {
 	uint8_t i;
 	
-	for(i=0;i<lenth;i++)
+	for(i = 0; i < lenth; i++)
 	{
 		Usart_Buffer_Write_Data(&Usart_TX_Buffer,*data);
 		data++;
