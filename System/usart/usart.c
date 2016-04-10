@@ -202,13 +202,6 @@ void USART1_IRQHandler(void)                											//串口1中断服务程序
 																						//发送方必须要求有数据包头，以便解决串口数据无地址的问题
 		Usart_Temp_Data = (uint8_t) USART_ReceiveData(USART1);          				//临时数据赋值
 		Usart_Buffer_Write_Data(&Usart_RX_Buffer,Usart_Temp_Data);               		//写串口接收缓冲数组
-		if(Usart_Temp_Data == 0x05)
-		{
-			LED1_ON;
-			LED2_ON;
-			LED3_ON;
-			LED4_ON;
-		}
 #if BLE_APP
 		Remote_control_APP(Usart_Temp_Data);
 #endif
