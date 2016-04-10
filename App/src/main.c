@@ -36,46 +36,17 @@ int main(void)
 	MS5611_Init();
 	while(1)
 	{
-//		if(ms5611_ms == 20)
-//		{
-//			if(ms5611_status == 1) 
-//			{
-//				MS5611_Pressure_Calculate();
-//				MS5611_Altitude_Calculate();
-//			}
-//			MS5611_TemperatureADC_Conversion();
-//		}
-//		if(ms5611_ms == 40)
-//		{
-//			MS5611_Temperature_Calculate();
-//			MS5611_PressureADC_Conversion();
-//			ms5611_status = 1;
-//			ms5611_ms = 0;
-//		}
-		IMU_Prepare_Data();  
-		if(lock_unlock_flag)//判断是否解锁与是否在执行解锁动作	
-		{		
-											//判断是否在执行上锁动作	
-			IMU_Update();					//姿态更新频率为1KHz
-			ms++;
-			
-			if((ms % 2) == 0)	 			//控制频率500Hz
-			{ 
-				Remote_Control_PWM_Convert();
-				//Data_Send_To_PC();
-				Control();	
-			}			
-					
-			if(ms == 1000)
-			{
-				system_time++;
-				ms = 0;	
-			}		
-		}
-	
-		else																	 //未解锁
+		if(loop_100Hz_flag)
 		{
-			Motor_PWM_Flash(0,0,0,0);					 //确保安全	
-		}			
+			
+		}
+		if(loop_50Hz_flag)
+		{
+			
+		}
+		if(loop_10Hz_flag)
+		{
+			
+		}
 	}
 }
