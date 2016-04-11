@@ -12,9 +12,9 @@ volatile u16 cnt = 0;
 volatile u16 ms = 0;
 volatile u16 ms5611_ms = 0;
 volatile u16 ms5611_status = 0;
-volatile u16 loop_100Hz_conut = 0,loop_50Hz_conut = 0,loop_10Hz_conut = 0;
+volatile u16 loop_500Hz_conut,loop_100Hz_conut = 0,loop_50Hz_conut = 0,loop_10Hz_conut = 0;
 
-u8 loop_100Hz_flag,loop_50Hz_flag,loop_10Hz_flag;
+u8 loop_500Hz_flag,loop_100Hz_flag,loop_50Hz_flag,loop_10Hz_flag;
 
 /*
  * 函数名：TIM3_Int_Init
@@ -59,10 +59,16 @@ void TIM3_IRQHandler(void)   //TIM3中断
 {
 
 	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET)  			//检查TIM3更新中断发生与否
-	{							
+	{			
+		loop_500Hz_conut++;
 		loop_100Hz_conut++;
 		loop_50Hz_conut++;
 		loop_10Hz_conut++;
+		if(loop_500Hz_conut == 10)
+		{
+			loop_500Hz_conut = 0;
+			loop_500Hz_flag = 1;
+		}		
 		if(loop_100Hz_conut == 10)
 		{
 			loop_100Hz_conut = 0;
