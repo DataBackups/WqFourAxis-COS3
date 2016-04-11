@@ -2,13 +2,16 @@
 #include "imu.h"
 #include "control.h"
 #include "flash_memory.h"
+#include "led.h"
 
 u8 imu_calibrate_flag = 0;              //校准标志位
 u8 fly_state_up = 0;					//上传信息标志位
 u8 hold_height = 0;
 u8 lock_unlock_flag = 0 ;				//解锁标志位，为0未解锁，为1解锁;上锁需要将标志置 0	
 u8 calibrate_status = 0;			 	//是否执行校准转态标志位
-
+u8 lost_remote_flag = 1;
+u8 fly_enable = 0;
+u8 head_mode = 0;
 extern vs16 throttle;
 extern S_FLOAT_XYZ Exp_Angle;
 
@@ -38,16 +41,16 @@ void Remote_Control_Cmd_Process(void)
 			lock_unlock_flag = 0;
 			break;
 		case REMOTE_CONTROL_CMD_FLY_LAUNCH:			//起飞
-			
+			fly_enable = 1;
 			break;
 		case REMOTE_CONTROL_CMD_FLY_LAND:			//降落
-			
+			fly_enable = 0;
 			break;
 		case REMOTE_CONTROL_CMD_FLY_HEAD_FREE:  	//有头模式
-			
+			head_mode = 1;
 			break;
 		case REMOTE_CONTROL_CMD_FLY_UNHEAD_FREE:	//无头模式
-			
+			head_mode = 0;
 			break;
 		case REMOTE_CONTROL_CMD_FLY_HOLD_HIGHT:		//定高
 			hold_height = 1;
@@ -60,6 +63,7 @@ void Remote_Control_Cmd_Process(void)
 			break;
 		case REMOTE_CONTROL_CMD_FLY_STATE:			//上传信息到手机
 			fly_state_up = 1;
+			lost_remote_flag = 0;
 			break;
 	}
 }
@@ -136,16 +140,17 @@ u8 Remote_Control_Is_Calibrate(void)
 {	
 	if( !lock_unlock_flag )													//如果未解锁才执行校准检测
 	{	
-		SysTick->CTRL &= ~ SysTick_CTRL_ENABLE_Msk;							//关闭中断
+		TIM_Cmd(TIM3, DISABLE); 											//关闭定时器
+		LED_Control.event = Event_Calibration;
+		LED_Flash();
 		calibrate_status = 1;
-
 		IMU_Date_Init(); 										 	 	 	//每次解锁后都先初始化导航数据
 		MPU6050_Date_Offset(5000);								 			//校准MPU6500
 		Flash_Memory_MPU6500_GYRO_Offset_Write();						 	//写入陀螺仪补偿
 		Flash_Memory_MPU6500_ACC_Offset_Write();						 	//写入加速度计补偿
 		Flash_Memory_Init();												//参数初始化
 		calibrate_status = 0;
-		SysTick->CTRL |=  SysTick_CTRL_ENABLE_Msk; 							//开启中断
+		TIM_Cmd(TIM3, ENABLE);  											//开启定时器
 		return 1;
 	}
 	else 
