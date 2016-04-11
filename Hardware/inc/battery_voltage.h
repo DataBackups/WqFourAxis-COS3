@@ -3,6 +3,7 @@
 
 #include "stm32f10x.h"
 
+#define BATTERY_VOLTAGE_CHECK_COUNT 	5000	    //5s
 #define BATTERY_VOLTAGE_FILTER_LENGTH 	5			//电池电压ADC采样值滑动滤波次数
 #define BATTERY_VOLTAGE_ALARM_VAL  		3.7	  		//接地
 #define BATTERY_VOLTAGE_CHARGE_VAL    	1.0	  		//该充电的电压
