@@ -136,7 +136,7 @@ void Inner_Loop_Control(void)
 	
 	PID_Roll_Rate.Out = PID_Roll_Rate.Pout + PID_Roll_Rate.Dout + PID_Roll_Rate.Iout;
 	PID_Pitch_Rate.Out = PID_Pitch_Rate.Pout + PID_Pitch_Rate.Dout + PID_Roll_Rate.Iout;
-  PID_Yaw_Rate.Out = PID_Yaw_Rate.Pout + PID_Yaw_Rate.Dout;
+	PID_Yaw_Rate.Out = PID_Yaw_Rate.Pout + PID_Yaw_Rate.Dout;
 	
 	//存储本次记录的陀螺仪角速率
 	MPU6500_Gyro_Last.Y = MPU6500_Gyro.Y;
@@ -181,10 +181,10 @@ void Height_Control(void)
 	}
 	else
 	{
-	   PID_Height.Out=0;
-		 PID_Height.Pout=0;
-		 PID_Height.Dout=0;
-     exp_height_flag = 1;
+		PID_Height.Out=0;
+		PID_Height.Pout=0;
+		PID_Height.Dout=0;
+		exp_height_flag = 1;
 	}
 }
 
