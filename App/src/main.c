@@ -13,6 +13,9 @@
 #include "remote_control.h"
 #include "control.h"
 #include "data_pc.h"
+#include "aid_control.h"
+
+uint16_t battery_count = 0; 
 
 int main(void)
 {	 
@@ -29,24 +32,74 @@ int main(void)
 	Battery_Voltage_ADC_Init();  
 	LED_Init();
 	Motor_Init(3999,35);      						//PWM输出初始化，电机PWM频率500Hz
-	while(MPU6050_Init());
-	TIM3_Int_Init(1000,72);
-	IMU_Date_Init(); 								//每次解锁后都先初始化导航数据
-	MPU6050_Date_Offset(5000);		
+	while(MPU6050_Init());							
+	TIM3_Int_Init(1000,72);							//1ms中断一次	
 	MS5611_Init();
+	
 	while(1)
 	{
+		IMU_Prepare_Data();
+		IMU_Update();			//姿态更新频率为1KHz
+		if(loop_500Hz_flag)
+		{
+			loop_500Hz_flag = 0;
+			//Data_Send_To_PC();
+		}
 		if(loop_100Hz_flag)
 		{
+			loop_100Hz_flag = 0;
 			
+			if(imu_calibrate_flag == 1)
+			{
+				imu_calibrate_flag = 0;
+				Remote_Control_Is_Calibrate();
+			}
+			
+			Remote_Control_PWM_Convert();			
+			Control();
 		}
+		
 		if(loop_50Hz_flag)
 		{
+			loop_50Hz_flag = 0;
 			
+			ms5611_ms++;
+	
+			if(ms5611_ms == 20)
+			{
+				if(ms5611_status == 1) 
+				{
+					MS5611_Pressure_Calculate();
+					MS5611_Altitude_Calculate();
+				}
+				MS5611_TemperatureADC_Conversion();
+			}
+			if(ms5611_ms == 40)
+			{
+				MS5611_Temperature_Calculate();
+				MS5611_PressureADC_Conversion();
+				ms5611_status = 1;
+				ms5611_ms = 0;
+			}			
 		}
+		
 		if(loop_10Hz_flag)
 		{
+			loop_10Hz_flag = 0;
+			if((++battery_count) * 100 >= BATTERY_VOLTAGE_CHECK_COUNT) 
+			{
+				battery_count = 0; 
+				lost_remote_flag = 1;
+				Battery_Voltege_Check();
+			}
 			
+			
+			
+			Aid_Control_Crash();
+			
+			Aid_Control_Led_Alarm();
+			
+			LED_Flash();
 		}
 	}
 }
