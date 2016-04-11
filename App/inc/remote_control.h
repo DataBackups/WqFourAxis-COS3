@@ -36,5 +36,5 @@ extern u8 hold_height;
 extern u8 lock_unlock_flag;
 extern u8 lost_remote_flag;
 extern u8 not_calibrate;
-
+extern u8 fly_enable;
 #endif

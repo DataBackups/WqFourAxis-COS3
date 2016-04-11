@@ -45,7 +45,14 @@ void Control(void)
 	Outter_Loop_Control();
 	Inner_Loop_Control();
 	Height_Control();	
-	if((throttle > LAUNCH_THROTTLE) && (lock_unlock_flag) && (Remote_Control_Is_Connected()))//当油门大于1500，解锁了，且遥控器连接正常情况下
+	if((lock_unlock_flag == 1 ) && (fly_enable == 0))
+	{
+		motor[1]  = 600;
+		motor[2]  = 600;
+		motor[3]  = 600;
+		motor[4]  = 600;
+	}
+	else if((throttle > LAUNCH_THROTTLE) && (lock_unlock_flag) && (Remote_Control_Is_Connected()))//当油门大于1500，解锁了，且遥控器连接正常情况下
 	{
 		motor[1] = ADD_THROTTLE + throttle - PID_Roll_Rate.Out - PID_Pitch_Rate.Out - PID_Yaw_Rate.Out + PID_Height.Out;
 		motor[2] = ADD_THROTTLE + throttle - PID_Roll_Rate.Out + PID_Pitch_Rate.Out + PID_Yaw_Rate.Out + PID_Height.Out;

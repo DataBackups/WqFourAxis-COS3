@@ -35,7 +35,6 @@ int main(void)
 	while(MPU6050_Init());							
 	TIM3_Int_Init(1000,72);							//1ms÷–∂œ“ª¥Œ	
 	MS5611_Init();
-	
 	while(1)
 	{
 		IMU_Prepare_Data();
