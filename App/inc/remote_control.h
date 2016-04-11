@@ -35,5 +35,6 @@ extern u8 imu_calibrate_flag;
 extern u8 hold_height;
 extern u8 lock_unlock_flag;
 extern u8 lost_remote_flag;
+extern u8 not_calibrate;
 
 #endif

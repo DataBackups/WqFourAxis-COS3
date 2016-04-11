@@ -12,10 +12,10 @@ void Aid_Control_Led_Alarm(void)
 
 	if(0)
 		LED_Control.event = Event_Calibration;
+	if(!not_calibrate)
+		LED_Control.event = Event_Calibration_Fail;
 	if(lost_remote_flag)
 		LED_Control.event = Event_Lost_Remote;
-	if(0)
-		LED_Control.event = Event_Calibration_Fail;
 	if(Battery.Battery_Alarm)
 		LED_Control.event = Event_Low_Voltage;
 	if(imu_calibrate_flag)

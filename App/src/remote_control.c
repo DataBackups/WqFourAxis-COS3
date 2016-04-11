@@ -12,6 +12,7 @@ u8 calibrate_status = 0;			 	//是否执行校准转态标志位
 u8 lost_remote_flag = 1;
 u8 fly_enable = 0;
 u8 head_mode = 0;
+u8 not_calibrate = 0;
 extern vs16 throttle;
 extern S_FLOAT_XYZ Exp_Angle;
 

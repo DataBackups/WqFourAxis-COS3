@@ -53,6 +53,7 @@ int main(void)
 			{
 				imu_calibrate_flag = 0;
 				Remote_Control_Is_Calibrate();
+				not_calibrate = 1;
 			}
 			
 			Remote_Control_PWM_Convert();			
