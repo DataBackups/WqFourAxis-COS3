@@ -90,7 +90,7 @@ int main(void)
 			if((++battery_count) * 100 >= BATTERY_VOLTAGE_CHECK_COUNT) 
 			{
 				battery_count = 0; 
-				lost_remote_flag = 1;
+				lost_remote_flag = 0;
 				Battery_Voltege_Check();
 			}
 			
