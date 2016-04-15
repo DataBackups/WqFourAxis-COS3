@@ -64,7 +64,7 @@ void TIM3_IRQHandler(void)   //TIM3ÖÐ¶Ï
 		loop_100Hz_conut++;
 		loop_50Hz_conut++;
 		loop_10Hz_conut++;
-		if(loop_500Hz_conut == 10)
+		if(loop_500Hz_conut == 2)
 		{
 			loop_500Hz_conut = 0;
 			loop_500Hz_flag = 1;
