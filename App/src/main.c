@@ -37,11 +37,12 @@ int main(void)
 	MS5611_Init();
 	while(1)
 	{
-		IMU_Prepare_Data();
-		IMU_Update();			//姿态更新频率为1KHz
+					//姿态更新频率为1KHz
 		if(loop_500Hz_flag)
 		{
 			loop_500Hz_flag = 0;
+			IMU_Prepare_Data();
+			IMU_Update();
 			//Data_Send_To_PC();
 		}
 		if(loop_100Hz_flag)
@@ -65,7 +66,7 @@ int main(void)
 			
 			ms5611_ms++;
 	
-			if(ms5611_ms == 20)
+			if(ms5611_ms == 2)
 			{
 				if(ms5611_status == 1) 
 				{
@@ -74,7 +75,7 @@ int main(void)
 				}
 				MS5611_TemperatureADC_Conversion();
 			}
-			if(ms5611_ms == 40)
+			if(ms5611_ms == 4)
 			{
 				MS5611_Temperature_Calculate();
 				MS5611_PressureADC_Conversion();
