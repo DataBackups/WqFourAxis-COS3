@@ -16,6 +16,7 @@
 volatile u16 motor[5];																		//定义电机
 vs16 throttle = 0;																				//油门值
 vu8 fly_state = 0;																				//定义飞行状态
+vs16 add_throttle = 0;
 
 volatile PID PID_Roll_Angle,PID_Pitch_Angle,PID_Yaw_Angle;//外环：角度PID环
 volatile PID PID_Roll_Rate,PID_Pitch_Rate,PID_Yaw_Rate;		//内环：角速度PID环
@@ -45,19 +46,12 @@ void Control(void)
 	Outter_Loop_Control();
 	Inner_Loop_Control();
 	Height_Control();	
-	if((lock_unlock_flag == 1 ) && (fly_enable == 0))
+	if(((lock_unlock_flag) && (Remote_Control_Is_Connected())))//当油门大于1500，解锁了，且遥控器连接正常情况下
 	{
-		motor[1]  = 600;
-		motor[2]  = 600;
-		motor[3]  = 600;
-		motor[4]  = 600;
-	}
-	else if((throttle > LAUNCH_THROTTLE) && (lock_unlock_flag) && (Remote_Control_Is_Connected()))//当油门大于1500，解锁了，且遥控器连接正常情况下
-	{
-		motor[1] = ADD_THROTTLE + throttle - PID_Roll_Rate.Out - PID_Pitch_Rate.Out - PID_Yaw_Rate.Out + PID_Height.Out;
-		motor[2] = ADD_THROTTLE + throttle - PID_Roll_Rate.Out + PID_Pitch_Rate.Out + PID_Yaw_Rate.Out + PID_Height.Out;
-		motor[3] = ADD_THROTTLE + throttle + PID_Roll_Rate.Out + PID_Pitch_Rate.Out - PID_Yaw_Rate.Out + PID_Height.Out;
-		motor[4] = ADD_THROTTLE + throttle + PID_Roll_Rate.Out - PID_Pitch_Rate.Out + PID_Yaw_Rate.Out + PID_Height.Out;
+		motor[1] = add_throttle + throttle - PID_Roll_Rate.Out - PID_Pitch_Rate.Out - PID_Yaw_Rate.Out + PID_Height.Out;
+		motor[2] = add_throttle + throttle - PID_Roll_Rate.Out + PID_Pitch_Rate.Out + PID_Yaw_Rate.Out + PID_Height.Out;
+		motor[3] = add_throttle + throttle + PID_Roll_Rate.Out + PID_Pitch_Rate.Out - PID_Yaw_Rate.Out + PID_Height.Out;
+		motor[4] = add_throttle + throttle + PID_Roll_Rate.Out - PID_Pitch_Rate.Out + PID_Yaw_Rate.Out + PID_Height.Out;
 		
 		fly_state = 1;
 	}

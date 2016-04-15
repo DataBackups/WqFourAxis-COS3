@@ -7,7 +7,10 @@
 #include "imu.h"
 
 #define LAUNCH_THROTTLE		1500 			//∆∑…”Õ√≈
-#define ADD_THROTTLE		1500 			//≤π≥‰”Õ√≈
+//#define ADD_THROTTLE		1500 			//≤π≥‰”Õ√≈
+
+extern vs16 throttle;
+extern vs16 add_throttle;
 
 typedef struct PID
 {
