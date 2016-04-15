@@ -13,7 +13,7 @@ u8 lost_remote_flag = 0;
 u8 fly_enable = 0;
 u8 head_mode = 0;
 u8 not_calibrate = 0;
-extern vs16 throttle;
+
 extern S_FLOAT_XYZ Exp_Angle;
 
 
@@ -175,7 +175,7 @@ void Remote_Control_PWM_Convert(void)
 	Exp_Angle.Y = (Remote_Control_Data[2]- 1500) * 0.05f;
 	if((Exp_Angle.Y > -2) && (Exp_Angle.Y < 2))	Exp_Angle.Y = 0;
 	
-	throttle	=	(vs16)(Remote_Control_Data[0] - 1000) * 3;
+	throttle = (vs16)(Remote_Control_Data[0] - 1000) * 3;
 	if(cnt == 20)
 	{
 		cnt = 0;	
@@ -199,4 +199,16 @@ void Remote_Control_PWM_Convert(void)
 		if(Exp_Angle.Z > 360)  Exp_Angle.Z = (float)((s32)Exp_Angle.Z % 360);
 		if(Exp_Angle.Z < -360) Exp_Angle.Z = (float)((s32)Exp_Angle.Z % -360);		
 	}
+	if(throttle <= 1500)
+	{
+		throttle = 0;
+		if(lock_unlock_flag)
+		{
+			add_throttle = 600;
+		}
+		else 
+			add_throttle = 0;
+	}
+	else
+		add_throttle = 1000;
 }
