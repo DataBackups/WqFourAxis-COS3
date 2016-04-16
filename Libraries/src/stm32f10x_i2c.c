@@ -299,15 +299,15 @@ void I2C_StructInit(I2C_InitTypeDef* I2C_InitStruct)
 {
 /*---------------- Reset I2C init structure parameters values ----------------*/
   /* initialize the I2C_ClockSpeed member */
-  I2C_InitStruct->I2C_ClockSpeed = 200000;
+  I2C_InitStruct->I2C_ClockSpeed = 5000;
   /* Initialize the I2C_Mode member */
   I2C_InitStruct->I2C_Mode = I2C_Mode_I2C;
   /* Initialize the I2C_DutyCycle member */
   I2C_InitStruct->I2C_DutyCycle = I2C_DutyCycle_2;
   /* Initialize the I2C_OwnAddress1 member */
-  I2C_InitStruct->I2C_OwnAddress1 = 0x12;
+  I2C_InitStruct->I2C_OwnAddress1 = 0;
   /* Initialize the I2C_Ack member */
-  I2C_InitStruct->I2C_Ack = I2C_Ack_Enable;
+  I2C_InitStruct->I2C_Ack = I2C_Ack_Disable;
   /* Initialize the I2C_AcknowledgedAddress member */
   I2C_InitStruct->I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
 }

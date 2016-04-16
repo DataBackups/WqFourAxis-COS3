@@ -194,11 +194,6 @@ void PWR_WakeUpPinCmd(FunctionalState NewState)
   *     @arg PWR_STOPEntry_WFE: enter STOP mode with WFE instruction
   * @retval None
   */
-
-
-
-
-
 void PWR_EnterSTOPMode(uint32_t PWR_Regulator, uint8_t PWR_STOPEntry)
 {
   uint32_t tmpreg = 0;
