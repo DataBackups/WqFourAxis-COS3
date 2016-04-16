@@ -12,5 +12,5 @@
 *.crf
 *.hex
 *.htm
+*.txt
 Output/
-JLinkLog.txt
