@@ -13,3 +13,4 @@
 *.hex
 *.htm
 Output/
+JLinkLog.txt
