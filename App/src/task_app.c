@@ -18,18 +18,20 @@
 
 uint16_t battery_count = 0;
 
-extern OS_TCB StartTaskTCB;							//任务控制块
-extern CPU_STK START_TASK_STK[START_STK_SIZE];		//任务堆栈	
+extern OS_TCB StartTaskTCB;									//任务控制块
+extern CPU_STK START_TASK_STK[START_STK_SIZE];				//任务堆栈	
 
-OS_TCB Led0TaskTCB;									//任务控制块
-CPU_STK LED0_TASK_STK[LED0_STK_SIZE];				//任务堆栈	
+OS_TCB Imu_Task_TCB;										//任务控制块
+CPU_STK IMU_TASK_STK[IMU_STK_SIZE];							//任务堆栈	
 
-OS_TCB Led1TaskTCB;									//任务控制块
-CPU_STK LED1_TASK_STK[LED1_STK_SIZE];				//任务堆栈	
+OS_TCB Control_Task_TCB;									//任务控制块
+CPU_STK CONTROL_TASK_STK[CONTROL_STK_SIZE];					//任务堆栈	
 
-OS_TCB	FloatTaskTCB;								//任务控制块
-__align(8) CPU_STK	FLOAT_TASK_STK[FLOAT_STK_SIZE];	//任务堆栈
+OS_TCB	Pressure_Task_TCB;									//任务控制块
+__align(8) CPU_STK	PRESSURE_TASK_STK[PRESSURE_STK_SIZE];	//任务堆栈
 
+OS_TCB Safety_Task_TCB;									//任务控制块
+CPU_STK SAFETY_TASK_STK[SAFETY_STK_SIZE];					//任务堆栈
 
 //开始任务函数
 void start_task(void *p_arg)
@@ -53,56 +55,72 @@ void start_task(void *p_arg)
 #endif		
 	
 	OS_CRITICAL_ENTER();	//进入临界区
-	//创建LED0任务
-	OSTaskCreate((OS_TCB 	* )&Led0TaskTCB,		
-				 (CPU_CHAR	* )"led0 task", 		
-                 (OS_TASK_PTR )led0_task, 			
+	//创建IMU任务
+	OSTaskCreate((OS_TCB 	* )&Imu_Task_TCB,		
+				 (CPU_CHAR	* )"imu task", 		
+                 (OS_TASK_PTR )imu_task, 			
                  (void		* )0,					
-                 (OS_PRIO	  )LED0_TASK_PRIO,     
-                 (CPU_STK   * )&LED0_TASK_STK[0],	
-                 (CPU_STK_SIZE)LED0_STK_SIZE/10,	
-                 (CPU_STK_SIZE)LED0_STK_SIZE,		
+                 (OS_PRIO	  )IMU_TASK_PRIO,     
+                 (CPU_STK   * )&IMU_TASK_STK[0],	
+                 (CPU_STK_SIZE)IMU_STK_SIZE/10,	
+                 (CPU_STK_SIZE)IMU_STK_SIZE,		
                  (OS_MSG_QTY  )0,					
                  (OS_TICK	  )0,					
                  (void   	* )0,					
                  (OS_OPT      )OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR,
                  (OS_ERR 	* )&err);				
 				 
-	//创建LED1任务
-	OSTaskCreate((OS_TCB 	* )&Led1TaskTCB,		
-				 (CPU_CHAR	* )"led1 task", 		
-                 (OS_TASK_PTR )led1_task, 			
+	//创建CONTROL任务
+	OSTaskCreate((OS_TCB 	* )&Control_Task_TCB,		
+				 (CPU_CHAR	* )"control task", 		
+                 (OS_TASK_PTR )control_task, 			
                  (void		* )0,					
-                 (OS_PRIO	  )LED1_TASK_PRIO,     	
-                 (CPU_STK   * )&LED1_TASK_STK[0],	
-                 (CPU_STK_SIZE)LED1_STK_SIZE/10,	
-                 (CPU_STK_SIZE)LED1_STK_SIZE,		
+                 (OS_PRIO	  )CONTROL_TASK_PRIO,     	
+                 (CPU_STK   * )&CONTROL_TASK_STK[0],	
+                 (CPU_STK_SIZE)CONTROL_STK_SIZE/10,	
+                 (CPU_STK_SIZE)CONTROL_STK_SIZE,		
                  (OS_MSG_QTY  )0,					
                  (OS_TICK	  )0,					
                  (void   	* )0,				
                  (OS_OPT      )OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR, 
                  (OS_ERR 	* )&err);	
 			 
-	//创建浮点测试任务
-	OSTaskCreate((OS_TCB 	* )&FloatTaskTCB,		
-				 (CPU_CHAR	* )"float test task", 		
-                 (OS_TASK_PTR )float_task, 			
+	//创建PRESSURE测试任务
+	OSTaskCreate((OS_TCB 	* )&Pressure_Task_TCB,		
+				 (CPU_CHAR	* )"pressure test task", 		
+                 (OS_TASK_PTR )pressure_task, 			
                  (void		* )0,					
-                 (OS_PRIO	  )FLOAT_TASK_PRIO,     	
-                 (CPU_STK   * )&FLOAT_TASK_STK[0],	
-                 (CPU_STK_SIZE)FLOAT_STK_SIZE/10,	
-                 (CPU_STK_SIZE)FLOAT_STK_SIZE,		
+                 (OS_PRIO	  )PRESSURE_TASK_PRIO,     	
+                 (CPU_STK   * )&PRESSURE_TASK_STK[0],	
+                 (CPU_STK_SIZE)PRESSURE_STK_SIZE/10,	
+                 (CPU_STK_SIZE)PRESSURE_STK_SIZE,		
                  (OS_MSG_QTY  )0,					
                  (OS_TICK	  )0,					
                  (void   	* )0,				
                  (OS_OPT      )OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR, 
-                 (OS_ERR 	* )&err);								 
+                 (OS_ERR 	* )&err);				
+
+	//创建SAFETY任务
+	OSTaskCreate((OS_TCB 	* )&Safety_Task_TCB,		
+				 (CPU_CHAR	* )"safety task", 		
+                 (OS_TASK_PTR )safety_task, 			
+                 (void		* )0,					
+                 (OS_PRIO	  )SAFETY_TASK_PRIO,     	
+                 (CPU_STK   * )&SAFETY_TASK_STK[0],	
+                 (CPU_STK_SIZE)SAFETY_STK_SIZE/10,	
+                 (CPU_STK_SIZE)SAFETY_STK_SIZE,		
+                 (OS_MSG_QTY  )0,					
+                 (OS_TICK	  )0,					
+                 (void   	* )0,				
+                 (OS_OPT      )OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR, 
+                 (OS_ERR 	* )&err);
+				 
 	OS_TaskSuspend((OS_TCB*)&StartTaskTCB,&err);		//挂起开始任务			 
 	OS_CRITICAL_EXIT();	//进入临界区
 }
 
 //led0任务函数
-void led0_task(void *p_arg)
+void imu_task(void *p_arg)
 {
 	OS_ERR err;
 	p_arg = p_arg;
@@ -118,23 +136,21 @@ void led0_task(void *p_arg)
 }
 
 //led1任务函数
-void led1_task(void *p_arg)
+void control_task(void *p_arg)
 {
 	OS_ERR err;
 	p_arg = p_arg;
 	while(1)
 	{
 		LED3_ON;
-		LED4_ON;
 		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时200ms
 		LED3_OFF;
-		LED4_OFF;
 		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时500ms
 	}
 }
 
 //浮点测试任务
-void float_task(void *p_arg)
+void pressure_task(void *p_arg)
 {
 	CPU_SR_ALLOC();
 	static float float_num=0.01;
@@ -152,3 +168,16 @@ void float_task(void *p_arg)
 	}
 }
 
+//任务函数
+void safety_task(void *p_arg)	
+{
+	OS_ERR err;
+	p_arg = p_arg;
+	while(1)
+	{
+		LED4_ON;
+		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时200ms
+		LED4_OFF;
+		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时500ms
+	}
+}
