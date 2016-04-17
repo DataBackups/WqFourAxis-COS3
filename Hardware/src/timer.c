@@ -6,6 +6,7 @@
 #include "control.h"
 #include "battery_voltage.h"
 #include "motor.h"
+#include "includes.h"
 
 volatile s16 system_time = 0;//单位：S
 volatile u16 cnt = 0;
@@ -57,7 +58,9 @@ void TIM3_Int_Init(u16 arr,u16 psc)
  */  
 void TIM3_IRQHandler(void)   //TIM3中断
 {
-
+#if SYSTEM_SUPPORT_OS 												//如果SYSTEM_SUPPORT_OS为真，则需要支持OS.
+	OSIntEnter();    
+#endif
 	if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET)  			//检查TIM3更新中断发生与否
 	{			
 		loop_500Hz_conut++;
@@ -87,4 +90,7 @@ void TIM3_IRQHandler(void)   //TIM3中断
 		
 		TIM_ClearITPendingBit(TIM3, TIM_IT_Update );  				//清除TIMx更新中断标志 	
 	}
+#if SYSTEM_SUPPORT_OS 												//如果SYSTEM_SUPPORT_OS为真，则需要支持OS.
+	OSIntExit();  											 
+#endif
 }

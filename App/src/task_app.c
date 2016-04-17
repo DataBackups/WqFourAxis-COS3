@@ -1,26 +1,34 @@
 #include "task_app.h"
-#include "led.h"
+#include "sys.h"
+#include "usart.h"
 #include "delay.h"
+#include "battery_voltage.h"
+#include "led.h"
+#include "motor.h"
+#include "mpu6050.h"
+#include "imu.h"
+#include "timer.h"
+#include "eeprom.h"
+#include "flash_memory.h"
+#include "ms5611.h"
+#include "remote_control.h"
+#include "control.h"
+#include "data_pc.h"
+#include "aid_control.h"
 
-//任务控制块
-extern OS_TCB StartTaskTCB;
-//任务堆栈	
-extern CPU_STK START_TASK_STK[START_STK_SIZE];
+uint16_t battery_count = 0;
 
-//任务控制块
-OS_TCB Led0TaskTCB;
-//任务堆栈	
-CPU_STK LED0_TASK_STK[LED0_STK_SIZE];
+extern OS_TCB StartTaskTCB;							//任务控制块
+extern CPU_STK START_TASK_STK[START_STK_SIZE];		//任务堆栈	
 
-//任务控制块
-OS_TCB Led1TaskTCB;
-//任务堆栈	
-CPU_STK LED1_TASK_STK[LED1_STK_SIZE];
+OS_TCB Led0TaskTCB;									//任务控制块
+CPU_STK LED0_TASK_STK[LED0_STK_SIZE];				//任务堆栈	
 
-//任务控制块
-OS_TCB	FloatTaskTCB;
-//任务堆栈
-__align(8) CPU_STK	FLOAT_TASK_STK[FLOAT_STK_SIZE];
+OS_TCB Led1TaskTCB;									//任务控制块
+CPU_STK LED1_TASK_STK[LED1_STK_SIZE];				//任务堆栈	
+
+OS_TCB	FloatTaskTCB;								//任务控制块
+__align(8) CPU_STK	FLOAT_TASK_STK[FLOAT_STK_SIZE];	//任务堆栈
 
 
 //开始任务函数
@@ -143,3 +151,4 @@ void float_task(void *p_arg)
 		delay_ms(500);			//延时500ms
 	}
 }
+
