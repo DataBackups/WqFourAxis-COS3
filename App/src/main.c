@@ -67,6 +67,6 @@ void APP_System_Init(void)
 	LED_Init();
 	Motor_Init(3999,35);      						//PWM输出初始化，电机PWM频率500Hz
 	while(MPU6050_Init());							
-	TIM3_Int_Init(1000,72);							//1ms中断一次	
+	//TIM3_Int_Init(1000,72);							//1ms中断一次	
 	MS5611_Init();
 }

@@ -28,9 +28,10 @@ OS_TCB Control_Task_TCB;									//任务控制块
 CPU_STK CONTROL_TASK_STK[CONTROL_STK_SIZE];					//任务堆栈	
 
 OS_TCB	Pressure_Task_TCB;									//任务控制块
-__align(8) CPU_STK	PRESSURE_TASK_STK[PRESSURE_STK_SIZE];	//任务堆栈
+//__align(8) CPU_STK	PRESSURE_TASK_STK[PRESSURE_STK_SIZE];	//任务堆栈
+CPU_STK	PRESSURE_TASK_STK[PRESSURE_STK_SIZE];				//任务堆栈
 
-OS_TCB Safety_Task_TCB;									//任务控制块
+OS_TCB Safety_Task_TCB;										//任务控制块
 CPU_STK SAFETY_TASK_STK[SAFETY_STK_SIZE];					//任务堆栈
 
 //开始任务函数
@@ -119,52 +120,88 @@ void start_task(void *p_arg)
 	OS_CRITICAL_EXIT();	//进入临界区
 }
 
-//led0任务函数
+//IMU任务函数
 void imu_task(void *p_arg)
 {
 	OS_ERR err;
 	p_arg = p_arg;
 	while(1)
 	{
-		LED1_ON;
-		LED2_ON;
-		OSTimeDlyHMSM(0,0,0,200,OS_OPT_TIME_HMSM_STRICT,&err); //延时200ms
-		LED1_OFF;
-		LED2_OFF;
-		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时500ms
+		IMU_Prepare_Data();
+		IMU_Update();
+		OSTimeDlyHMSM(0,0,0,1,OS_OPT_TIME_HMSM_STRICT,&err); //延时1ms
+		//Data_Send_To_PC();
+		
+//		LED1_ON;
+//		LED2_ON;
+//		OSTimeDlyHMSM(0,0,0,200,OS_OPT_TIME_HMSM_STRICT,&err); //延时200ms
+//		LED1_OFF;
+//		LED2_OFF;
+//		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时500ms
 	}
 }
 
-//led1任务函数
+//CONTROL任务函数
 void control_task(void *p_arg)
 {
 	OS_ERR err;
 	p_arg = p_arg;
 	while(1)
 	{
-		LED3_ON;
-		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时200ms
-		LED3_OFF;
-		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时500ms
+		if(imu_calibrate_flag == 1)
+		{
+			imu_calibrate_flag = 0;
+			Remote_Control_Is_Calibrate();
+			not_calibrate = 1;
+		}
+		
+		Remote_Control_PWM_Convert();			
+		Control();
+		OSTimeDlyHMSM(0,0,0,2,OS_OPT_TIME_HMSM_STRICT,&err); //延时2ms
+//		LED3_ON;
+//		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时200ms
+//		LED3_OFF;
+//		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时500ms
 	}
 }
 
-//浮点测试任务
+//PRESSURE任务
 void pressure_task(void *p_arg)
 {
-	CPU_SR_ALLOC();
-	static float float_num=0.01;
+	OS_ERR err;
+	p_arg = p_arg;
+//	CPU_SR_ALLOC();
+//	static float float_num=0.01;
 	while(1)
 	{
-		float_num+=0.01f;
-		if(float_num > 0.100000)
+		ms5611_ms++;
+
+		if(ms5611_ms == 2)
 		{
-			float_num = 0.01;
+			if(ms5611_status == 1) 
+			{
+				MS5611_Pressure_Calculate();
+				MS5611_Altitude_Calculate();
+			}
+			MS5611_TemperatureADC_Conversion();
 		}
-		OS_CRITICAL_ENTER();	//进入临界区
-		printf("float_num的值为: %.4f\r\n",float_num);
-		OS_CRITICAL_EXIT();		//退出临界区
-		delay_ms(500);			//延时500ms
+		if(ms5611_ms == 4)
+		{
+			MS5611_Temperature_Calculate();
+			MS5611_PressureADC_Conversion();
+			ms5611_status = 1;
+			ms5611_ms = 0;
+		}
+		OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err); //延时10ms
+//		float_num+=0.01f;
+//		if(float_num > 0.100000)
+//		{
+//			float_num = 0.01;
+//		}
+//		OS_CRITICAL_ENTER();	//进入临界区
+//		printf("float_num的值为: %.4f\r\n",float_num);
+//		OS_CRITICAL_EXIT();		//退出临界区
+//		delay_ms(500);			//延时500ms
 	}
 }
 
@@ -175,9 +212,24 @@ void safety_task(void *p_arg)
 	p_arg = p_arg;
 	while(1)
 	{
-		LED4_ON;
-		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时200ms
-		LED4_OFF;
-		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时500ms
+		if((++battery_count) * 100 >= BATTERY_VOLTAGE_CHECK_COUNT) 
+		{
+			battery_count = 0; 
+			lost_remote_flag = 0;
+			Battery_Voltege_Check();
+		}
+		
+		
+		
+		Aid_Control_Crash();
+		
+		Aid_Control_Led_Alarm();
+		
+		LED_Flash();
+		OSTimeDlyHMSM(0,0,0,100,OS_OPT_TIME_HMSM_STRICT,&err); //延时200ms
+//		LED4_ON;
+//		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时200ms
+//		LED4_OFF;
+//		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时500ms
 	}
 }
