@@ -351,7 +351,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>2</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
@@ -394,7 +394,7 @@
             </VariousControls>
           </Aads>
           <LDads>
-            <umfTarg>0</umfTarg>
+            <umfTarg>1</umfTarg>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
             <noStLib>0</noStLib>
@@ -456,6 +456,11 @@
               <FileType>1</FileType>
               <FilePath>.\App\src\remote_control.c</FilePath>
             </File>
+            <File>
+              <FileName>task_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\App\src\task_app.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -485,11 +490,6 @@
               <FileName>iic.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Hardware\src\iic.c</FilePath>
-            </File>
-            <File>
-              <FileName>key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\src\key.c</FilePath>
             </File>
             <File>
               <FileName>led.c</FileName>
@@ -580,11 +580,6 @@
               <FileName>stm32f10x_pwr.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Libraries\src\stm32f10x_pwr.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Libraries\src\stm32f10x_spi.c</FilePath>
             </File>
             <File>
               <FileName>stm32f10x_tim.c</FileName>
@@ -712,34 +707,14 @@
               <FilePath>.\UCOSIII\uC-LIB\lib_ascii.c</FilePath>
             </File>
             <File>
-              <FileName>lib_ascii.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\UCOSIII\uC-LIB\lib_ascii.h</FilePath>
-            </File>
-            <File>
-              <FileName>lib_def.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\UCOSIII\uC-LIB\lib_def.h</FilePath>
-            </File>
-            <File>
               <FileName>lib_math.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\UCOSIII\uC-LIB\lib_math.c</FilePath>
             </File>
             <File>
-              <FileName>lib_math.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\UCOSIII\uC-LIB\lib_math.h</FilePath>
-            </File>
-            <File>
               <FileName>lib_mem.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\UCOSIII\uC-LIB\lib_mem.c</FilePath>
-            </File>
-            <File>
-              <FileName>lib_mem.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\UCOSIII\uC-LIB\lib_mem.h</FilePath>
             </File>
             <File>
               <FileName>lib_mem_a.asm</FileName>
@@ -750,11 +725,6 @@
               <FileName>lib_str.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\UCOSIII\uC-LIB\lib_str.c</FilePath>
-            </File>
-            <File>
-              <FileName>lib_str.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\UCOSIII\uC-LIB\lib_str.h</FilePath>
             </File>
           </Files>
         </Group>

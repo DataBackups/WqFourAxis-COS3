@@ -13,6 +13,7 @@ u8 lost_remote_flag = 0;
 u8 fly_enable = 0;
 u8 head_mode = 0;
 u8 not_calibrate = 0;
+u8 fly_enable_flag = 0;
 
 extern S_FLOAT_XYZ Exp_Angle;
 
@@ -37,9 +38,11 @@ void Remote_Control_Cmd_Process(void)
 			break;
 		case REMOTE_CONTROL_CMD_FLY_LOCK:			//½âËø
 			lock_unlock_flag = 1;
+			fly_enable_flag = 1;
 			break;
 		case REMOTE_CONTROL_CMD_FLY_UNLOCK:			//ÉÏËø
 			lock_unlock_flag = 0;
+			fly_enable_flag = 0;
 			break;
 		case REMOTE_CONTROL_CMD_FLY_LAUNCH:			//Æð·É
 			fly_enable = 1;

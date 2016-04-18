@@ -219,8 +219,6 @@ void safety_task(void *p_arg)
 			Battery_Voltege_Check();
 		}
 		
-		
-		
 		Aid_Control_Crash();
 		
 		Aid_Control_Led_Alarm();
