@@ -141,14 +141,19 @@ void control_task(void *p_arg)
 	p_arg = p_arg;
 	while(1)
 	{
-		if(imu_calibrate_flag == 1)
+		if(!lock_unlock_flag)
 		{
-			if(Remote_Control_Is_Calibrate())
+			if(imu_calibrate_flag == 1)
 			{
-				imu_calibrate_flag = 0;
-				not_calibrate = 1;
-			}					
+				if(Remote_Control_Is_Calibrate())
+				{
+					imu_calibrate_flag = 0;
+					not_calibrate = 1;
+				}					
+			}
 		}
+		else
+			imu_calibrate_flag = 0;
 		
 		Remote_Control_PWM_Convert();			
 		Control();

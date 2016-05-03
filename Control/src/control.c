@@ -204,30 +204,30 @@ void Height_Control(void)
 void PID_Init(void)
 {
 	//外环：角度环	
-	PID_Roll_Angle.P = 4.7;
-	PID_Roll_Angle.I = 0.001;
+	PID_Roll_Angle.P = 0;
+	PID_Roll_Angle.I = 0;
 	PID_Roll_Angle.D = 0;
 	
-	PID_Pitch_Angle.P = 4.7;
-	PID_Pitch_Angle.I = 0.001;
+	PID_Pitch_Angle.P = 0;
+	PID_Pitch_Angle.I = 0;
 	PID_Pitch_Angle.D = 0;
 	
-	PID_Yaw_Angle.P = 6.7;
+	PID_Yaw_Angle.P = 0;
 	PID_Yaw_Angle.I = 0;
 	PID_Yaw_Angle.D = 0;
 		
 	//内环：角速度环	
-	PID_Roll_Rate.P = 4.4;
+	PID_Roll_Rate.P = 5;
 	PID_Roll_Rate.I = 0;
-	PID_Roll_Rate.D = 0.2;
+	PID_Roll_Rate.D = 0.3;
 	
-	PID_Pitch_Rate.P = 4.4;
+	PID_Pitch_Rate.P = 5;
 	PID_Pitch_Rate.I = 0;
-	PID_Pitch_Rate.D = 0.2;
+	PID_Pitch_Rate.D = 0.3;
 	
-	PID_Yaw_Rate.P = 5.2;
+	PID_Yaw_Rate.P = 5;
 	PID_Yaw_Rate.I = 0;
-	PID_Yaw_Rate.D = 0.2;
+	PID_Yaw_Rate.D = 0.3;
 
 	//高度
 	PID_Height.P = 2;
