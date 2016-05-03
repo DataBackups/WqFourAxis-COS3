@@ -29,7 +29,7 @@ void Aid_Control_Led_Alarm(void)
 void Aid_Control_Crash(void)
 {
 
-	if(fabs(Angle.X)>80 || fabs(Angle.Y)>80 )
+	if(fabs(Angle.X)>70 || fabs(Angle.Y)>70 )
 	{
 		Motor_PWM_Flash(0,0,0,0);
 		fly_enable_flag = 0;

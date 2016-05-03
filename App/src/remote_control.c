@@ -28,6 +28,7 @@ uint16_t Remote_Control_Data[4]={1500,1500,1500,1500};
 //处理发送给飞控的MSP命令
 void Remote_Control_Cmd_Process(void)
 {
+	lost_remote_flag = 1;
 	switch(Usart_Data_Temp[4])
 	{
 		case REMOTE_CONTROL_CMD_FLY_FOUR_DATA:
@@ -67,7 +68,6 @@ void Remote_Control_Cmd_Process(void)
 			break;
 		case REMOTE_CONTROL_CMD_FLY_STATE:			//上传信息到手机
 			fly_state_up = 1;
-			lost_remote_flag = 1;
 			break;
 	}
 }
@@ -144,9 +144,8 @@ u8 Remote_Control_Is_Calibrate(void)
 {	
 	if( !lock_unlock_flag )													//如果未解锁才执行校准检测
 	{	
-		TIM_Cmd(TIM3, DISABLE); 											//关闭定时器
-		LED_Control.event = Event_Calibration;
-		LED_Flash();
+		//LED_Control.event = Event_Calibration;
+		//LED_Flash();
 		calibrate_status = 1;
 		IMU_Date_Init(); 										 	 	 	//每次解锁后都先初始化导航数据
 		MPU6050_Date_Offset(5000);								 			//校准MPU6500
@@ -154,7 +153,6 @@ u8 Remote_Control_Is_Calibrate(void)
 		Flash_Memory_MPU6500_ACC_Offset_Write();						 	//写入加速度计补偿
 		Flash_Memory_Init();												//参数初始化
 		calibrate_status = 0;
-		TIM_Cmd(TIM3, ENABLE);  											//开启定时器
 		return 1;
 	}
 	else 
@@ -202,7 +200,7 @@ void Remote_Control_PWM_Convert(void)
 		if(Exp_Angle.Z > 360)  Exp_Angle.Z = (float)((s32)Exp_Angle.Z % 360);
 		if(Exp_Angle.Z < -360) Exp_Angle.Z = (float)((s32)Exp_Angle.Z % -360);		
 	}
-	if(throttle <= 1500)
+	if(throttle == 1500)
 	{
 		throttle = 0;
 		if(lock_unlock_flag)
@@ -211,7 +209,18 @@ void Remote_Control_PWM_Convert(void)
 		}
 		else 
 			add_throttle = 0;
+	}	
+	else if(throttle < 1500)
+	{
+		throttle = 0;
+		if(lock_unlock_flag)
+		{
+			add_throttle = 1000;
+		}
+		else 
+			add_throttle = 0;
 	}
 	else
 		add_throttle = 1000;
+		
 }

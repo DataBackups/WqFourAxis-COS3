@@ -115,9 +115,9 @@ void start_task(void *p_arg)
                  (void   	* )0,				
                  (OS_OPT      )OS_OPT_TASK_STK_CHK|OS_OPT_TASK_STK_CLR, 
                  (OS_ERR 	* )&err);
-				 
-	OS_TaskSuspend((OS_TCB*)&StartTaskTCB,&err);		//挂起开始任务			 
+				 		 
 	OS_CRITICAL_EXIT();	//进入临界区
+	OSTaskDel((OS_TCB*)0,&err);	//删除start_task任务自身
 }
 
 //IMU任务函数
@@ -129,15 +129,8 @@ void imu_task(void *p_arg)
 	{
 		IMU_Prepare_Data();
 		IMU_Update();
-		OSTimeDlyHMSM(0,0,0,1,OS_OPT_TIME_HMSM_STRICT,&err); //延时1ms
+		OSTimeDlyHMSM(0,0,0,3,OS_OPT_TIME_HMSM_STRICT,&err); //延时3ms
 		//Data_Send_To_PC();
-		
-//		LED1_ON;
-//		LED2_ON;
-//		OSTimeDlyHMSM(0,0,0,200,OS_OPT_TIME_HMSM_STRICT,&err); //延时200ms
-//		LED1_OFF;
-//		LED2_OFF;
-//		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时500ms
 	}
 }
 
@@ -150,18 +143,16 @@ void control_task(void *p_arg)
 	{
 		if(imu_calibrate_flag == 1)
 		{
-			imu_calibrate_flag = 0;
-			Remote_Control_Is_Calibrate();
-			not_calibrate = 1;
+			if(Remote_Control_Is_Calibrate())
+			{
+				imu_calibrate_flag = 0;
+				not_calibrate = 1;
+			}					
 		}
 		
 		Remote_Control_PWM_Convert();			
 		Control();
-		OSTimeDlyHMSM(0,0,0,2,OS_OPT_TIME_HMSM_STRICT,&err); //延时2ms
-//		LED3_ON;
-//		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时200ms
-//		LED3_OFF;
-//		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时500ms
+		OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err); //延时10ms
 	}
 }
 
@@ -170,8 +161,6 @@ void pressure_task(void *p_arg)
 {
 	OS_ERR err;
 	p_arg = p_arg;
-//	CPU_SR_ALLOC();
-//	static float float_num=0.01;
 	while(1)
 	{
 		ms5611_ms++;
@@ -192,16 +181,7 @@ void pressure_task(void *p_arg)
 			ms5611_status = 1;
 			ms5611_ms = 0;
 		}
-		OSTimeDlyHMSM(0,0,0,10,OS_OPT_TIME_HMSM_STRICT,&err); //延时10ms
-//		float_num+=0.01f;
-//		if(float_num > 0.100000)
-//		{
-//			float_num = 0.01;
-//		}
-//		OS_CRITICAL_ENTER();	//进入临界区
-//		printf("float_num的值为: %.4f\r\n",float_num);
-//		OS_CRITICAL_EXIT();		//退出临界区
-//		delay_ms(500);			//延时500ms
+		OSTimeDlyHMSM(0,0,0,50,OS_OPT_TIME_HMSM_STRICT,&err); //延时50ms
 	}
 }
 
@@ -224,10 +204,6 @@ void safety_task(void *p_arg)
 		Aid_Control_Led_Alarm();
 		
 		LED_Flash();
-		OSTimeDlyHMSM(0,0,0,100,OS_OPT_TIME_HMSM_STRICT,&err); //延时200ms
-//		LED4_ON;
-//		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时200ms
-//		LED4_OFF;
-//		OSTimeDlyHMSM(0,0,0,500,OS_OPT_TIME_HMSM_STRICT,&err); //延时500ms
+		OSTimeDlyHMSM(0,0,0,100,OS_OPT_TIME_HMSM_STRICT,&err); //延时100ms
 	}
 }

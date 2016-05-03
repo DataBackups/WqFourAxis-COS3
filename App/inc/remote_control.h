@@ -3,14 +3,6 @@
 
 #include "stm32f10x.h"
 
-enum 
-{
-	DISARMED = 0,
-	REQ_ARM,
-	ARMED,
-	REQ_DISARM
-};
-
 #define MAX_REC_LEN 32
 
 #define REMOTE_CONTROL_CMD_FLY_FOUR_DATA		7

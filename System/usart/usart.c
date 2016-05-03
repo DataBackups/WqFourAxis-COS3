@@ -177,9 +177,6 @@ void uart_init(u32 bound){
 	Usart_RX_Buffer.Read_Index = 0;
 	Usart_RX_Buffer.Mask = RX_BUFFER_SIZE - 1;
 	Usart_RX_Buffer.P_buffer = &RX_buffer[0];
-	
-	printf("Usart 1 init success...\r\n");
-
 }
 
 volatile uint8_t Usart_Temp_Data;

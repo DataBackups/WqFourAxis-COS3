@@ -13,18 +13,17 @@
 #include "control.h"
 #include "remote_control.h"
 
-volatile u16 motor[5];																		//定义电机
-vs16 throttle = 0;																				//油门值
-vu8 fly_state = 0;																				//定义飞行状态
+volatile u16 motor[5];										//定义电机
+vs16 throttle = 0;											//油门值
+vu8 fly_state = 0;											//定义飞行状态
 vs16 add_throttle = 0;
 
-volatile PID PID_Roll_Angle,PID_Pitch_Angle,PID_Yaw_Angle;//外环：角度PID环
+volatile PID PID_Roll_Angle,PID_Pitch_Angle,PID_Yaw_Angle;	//外环：角度PID环
 volatile PID PID_Roll_Rate,PID_Pitch_Rate,PID_Yaw_Rate;		//内环：角速度PID环
-volatile PID PID_Height;																	//高度
-volatile S_FLOAT_XYZ Exp_Angle;														//期望角度
-volatile S_FLOAT_XYZ MPU6500_Gyro_Last;										//上一次记录的陀螺仪数据
-
-extern u8 lock_unlock_flag;//解锁标志位，为0未解锁，为1解锁	
+volatile PID PID_Height;									//高度
+volatile S_FLOAT_XYZ Exp_Angle;								//期望角度
+volatile S_FLOAT_XYZ MPU6500_Gyro_Last;						//上一次记录的陀螺仪数据
+	
 extern float angle_z;
 
 volatile s32 exp_height;
@@ -46,7 +45,7 @@ void Control(void)
 	Outter_Loop_Control();
 	Inner_Loop_Control();
 	Height_Control();	
-	if(((lock_unlock_flag) && (fly_enable_flag) &&(Remote_Control_Is_Connected())))//当油门大于1500，解锁了，且遥控器连接正常情况下
+	if(((fly_enable_flag) && (lock_unlock_flag) &&(Remote_Control_Is_Connected())))//当油门大于1500，解锁了，且遥控器连接正常情况下
 	{
 		motor[1] = add_throttle + throttle - PID_Roll_Rate.Out - PID_Pitch_Rate.Out - PID_Yaw_Rate.Out + PID_Height.Out;
 		motor[2] = add_throttle + throttle - PID_Roll_Rate.Out + PID_Pitch_Rate.Out + PID_Yaw_Rate.Out + PID_Height.Out;
@@ -116,8 +115,8 @@ void Inner_Loop_Control(void)
 	PID_Roll_Rate.Pout = PID_Roll_Rate.P  * roll_rate_err;
 	PID_Pitch_Rate.Pout= PID_Pitch_Rate.P * pitch_rate_err;
 	PID_Yaw_Rate.Pout  = PID_Yaw_Rate.P * yaw_rate_err;
-	
-	PID_Roll_Rate.Dout = PID_Roll_Rate.D * (MPU6500_Gyro.Y - MPU6500_Gyro_Last.Y);//对陀螺仪
+	//对陀螺仪
+	PID_Roll_Rate.Dout = PID_Roll_Rate.D * (MPU6500_Gyro.Y - MPU6500_Gyro_Last.Y);
 	PID_Pitch_Rate.Dout = PID_Pitch_Rate.D * (MPU6500_Gyro.X - MPU6500_Gyro_Last.X);
 	PID_Yaw_Rate.Dout = PID_Yaw_Rate.D * (MPU6500_Gyro.Z - MPU6500_Gyro_Last.Z);
 	
@@ -147,9 +146,9 @@ void Inner_Loop_Control(void)
  */  
 void Height_Control(void)
 {
-	static s32 height_err = 0;	//高度偏差
+	static s32 height_err = 0;		//高度偏差
 	static s32	height_Last = 0;
-	if(hold_height)	//进入定高模式,注意数据更新的频率只有50hz
+	if(hold_height)					//进入定高模式,注意数据更新的频率只有50hz
 	{ 
 		if(exp_height_flag == 1)
 		{
@@ -160,16 +159,16 @@ void Height_Control(void)
 		height_err = exp_height - height;
 		if((height_err > 500) || (height_err < -500)) 
 		{
-			height_err = 0;//偏差大于500cm，则认为数据错误，系统崩溃，定高模式失效
+			height_err = 0;			//偏差大于500cm，则认为数据错误，系统崩溃，定高模式失效
 			PID_Height.Out = 0;
 		}
 		else
 		{
 			PID_Height.Pout = PID_Height.P * height_err;
 			PID_Height.Dout = PID_Height.D * (height - height_Last);//对陀螺仪
-			height_Last = height;//存储本次高度值
-			//PID_Height.Dout=PID_Height.D*Vz; //这里的更新频率为50hz
-		   //因为高度的更新频率要大的多，所以这里要保持一下
+			height_Last = height;	//存储本次高度值
+									//PID_Height.Dout=PID_Height.D*Vz; //这里的更新频率为50hz
+									//因为高度的更新频率要大的多，所以这里要保持一下
 			PID_Height.Out = PID_Height.Pout + PID_Height.Iout -PID_Height.Dout;
 		}			
 		
@@ -204,38 +203,38 @@ void Height_Control(void)
  */ 
 void PID_Init(void)
 {
-//外环：角度环	
-	PID_Roll_Angle.P = 8;
+	//外环：角度环	
+	PID_Roll_Angle.P = 4.7;
 	PID_Roll_Angle.I = 0.001;
 	PID_Roll_Angle.D = 0;
 	
-	PID_Pitch_Angle.P = 8;
+	PID_Pitch_Angle.P = 4.7;
 	PID_Pitch_Angle.I = 0.001;
 	PID_Pitch_Angle.D = 0;
 	
-	PID_Yaw_Angle.P = 10;
+	PID_Yaw_Angle.P = 6.7;
 	PID_Yaw_Angle.I = 0;
 	PID_Yaw_Angle.D = 0;
 		
-//内环：角速度环	
-	PID_Roll_Rate.P = 3.3;
+	//内环：角速度环	
+	PID_Roll_Rate.P = 4.4;
 	PID_Roll_Rate.I = 0;
 	PID_Roll_Rate.D = 0.2;
 	
-	PID_Pitch_Rate.P = 3.3;
+	PID_Pitch_Rate.P = 4.4;
 	PID_Pitch_Rate.I = 0;
 	PID_Pitch_Rate.D = 0.2;
 	
-	PID_Yaw_Rate.P = 5;
+	PID_Yaw_Rate.P = 5.2;
 	PID_Yaw_Rate.I = 0;
 	PID_Yaw_Rate.D = 0.2;
 
-//高度
+	//高度
 	PID_Height.P = 2;
 	PID_Height.I = 0;
 	PID_Height.D = 1;
 
-//初始化清零
+	//初始化清零
 	PID_Roll_Angle.Pout = 0;
 	PID_Roll_Angle.Iout = 0;
 	PID_Roll_Angle.Dout = 0;

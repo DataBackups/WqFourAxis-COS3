@@ -3,7 +3,7 @@
 
 #include "stm32f10x.h"
 
-#define SAMPLE_HALF_T 0.001f     		//采样周期的一半，单位：s
+#define SAMPLE_HALF_T 0.0015f     		//采样周期的一半，单位：s
 #define FILTER_LENGTH 20				//滑动滤波窗口长度
 
 #define GYRO_G 	0.0610351f				//角速度变成度/秒     此参数对应陀螺2000度每秒  Gyro_G=1/16.375=0.0610687
